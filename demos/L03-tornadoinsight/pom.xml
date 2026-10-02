@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- L03 · TornadoInsight: puts the TornadoVM API on the IDE's classpath so RecursionExample.java resolves.
+     Open this file in IntelliJ as a Maven project; TornadoInsight runs the code on your local SDK. -->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>uk.ac.manchester.tornado.lab</groupId>
+    <artifactId>l03-tornadoinsight</artifactId>
+    <version>1.0</version>
+
+    <properties>
+        <maven.compiler.release>22</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- keep in step with TORNADOVM_VERSION in env/versions.env -->
+        <tornadovm.version>7.0.1-jdk22plus</tornadovm.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.github.beehive-lab</groupId>
+            <artifactId>tornado-api</artifactId>
+            <version>${tornadovm.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <!-- the sources sit in this folder (uk/ac/...), not under src/main/java -->
+        <sourceDirectory>.</sourceDirectory>
+    </build>
+</project>

@@ -1,6 +1,7 @@
 # outputs written by the demo scripts
 demos/L04-tornadovmpulse/profile.json
 demos/L05-tornadoviz/bytecodes/
+demos/L03-tornadoinsight/target/
 logs/
 # models are downloaded, never committed
 *.gguf
