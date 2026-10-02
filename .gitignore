@@ -8,3 +8,6 @@ logs/
 results/
 .DS_Store
 stats-mxm-*.txt
+# IntelliJ project files
+.idea/
+*.iml
