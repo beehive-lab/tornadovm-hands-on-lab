@@ -60,7 +60,7 @@ On a GPU smaller than a budget, lower it. jitLLM then reports how much the model
 - [ ] Rehearse every demo on macOS · Metal, Linux · CUDA and Linux · OpenCL.
 - [ ] Record the GPU memory L11 and L12 need.
 - [ ] Publish `flink-accelerator-tornadovm` (L11, L12), or move its scripts here.
-- [ ] Add download URLs for `beehive-llama-3.2-1b-instruct-fp16.gguf` (L08–L10) and Qwen3-0.6B FP16 (L12).
+- [ ] Add the download URL for Qwen3-0.6B FP16 (L12).
 - [ ] Pin commits for every external repository in `env/versions.env`.
 - [ ] Confirm that jitLLM `feature/stream-usage` works with the 7.0.1 SDK (L10); a source build needs TornadoVM develop.
 - [ ] Confirm L07 runs with the 7.0.1 SDK; the CUDA demos repository defaults to 7.0.0.

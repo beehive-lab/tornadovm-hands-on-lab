@@ -7,13 +7,14 @@ An LLM inference engine in Java; TornadoVM compiles its kernels for Metal, OpenC
 | Platforms | macOS · Metal, Linux · CUDA, Linux · OpenCL |
 | GPU memory | 14GB budget by default; more for larger models, less is possible on smaller GPUs (see below) |
 | Code | [beehive-lab/jitllm](https://github.com/beehive-lab/jitllm) |
-| Model | `beehive-llama-3.2-1b-instruct-fp16.gguf` (TODO: add its download URL) |
+| Model | [`gemma-4-E2B-it-Q4_0.gguf`](https://huggingface.co/unsloth/gemma-4-E2B-it-GGUF/resolve/main/gemma-4-E2B-it-Q4_0.gguf) (Gemma 4 E2B instruct, Q4_0, 3GB) |
 
 ## Run without building (released SDK + JBang)
 
 ```bash
 curl -Ls https://sh.jbang.dev | bash -s - app setup      # once
-M=beehive-llama-3.2-1b-instruct-fp16.gguf
+curl -L -O https://huggingface.co/unsloth/gemma-4-E2B-it-GGUF/resolve/main/gemma-4-E2B-it-Q4_0.gguf
+M=gemma-4-E2B-it-Q4_0.gguf
 jbang jitllm@beehive-lab -m $M -p "Explain GPU acceleration in one sentence."
 ```
 
@@ -48,12 +49,12 @@ jitLLM reserves a device budget up front. The lab's default is `JITLLM_GPU_MEMOR
 
 | Model size | Budget | Flag |
 |---|---|---|
-| 1B (this lab) | 14GB (default) | none |
+| Gemma 4 E2B Q4_0 (this lab) | 14GB (default) | none |
 | 3–7B | 15GB+ | `--gpu-memory 15GB` |
 | 8B+ | 20GB+ | `--gpu-memory 20GB` |
 
 - **Smaller GPU than the budget:** lower it, for example `--gpu-memory 8GB`. If the budget is too small, jitLLM stops with `GPUL-MEM-001`, states how much the model needs, and prints a per-component memory plan; set the budget to that figure.
-- **macOS:** memory is unified, and macOS lets the GPU use only part of it. On a 16GB Mac a 14GB budget may not fit, so lower it and stay with the 1B model.
+- **macOS:** memory is unified, and macOS lets the GPU use only part of it. On a 16GB Mac a 14GB budget may not fit, so lower it and stay with the lab's model.
 - **Still out of memory:** use a Q4_0 model instead of Q8_0, shorten the context, or close other GPU applications.
 
 ## What to look for

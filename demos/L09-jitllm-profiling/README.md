@@ -12,7 +12,7 @@ The TornadoVM flags from the MacBook part (L02, L04), applied to a real workload
 ## Run
 
 ```bash
-M=beehive-llama-3.2-1b-instruct-fp16.gguf
+M=gemma-4-E2B-it-Q4_0.gguf
 ./jitllm --gpu --model $M --prompt "..." --print-kernel
 ./jitllm --gpu --model $M --prompt "..." --print-bytecodes
 ```

@@ -16,7 +16,7 @@ IntelliJ talks to jitLLM over its OpenAI-compatible endpoint, on your own GPU.
 git clone -b feature/stream-usage https://github.com/beehive-lab/jitllm.git && cd jitllm
 # build as in L08 (scripts/tornadovm-dev.sh), then:
 # on Metal, add --fp32-kv-cache: a source build refuses an FP16 key/value cache for F16 Llama (GPUL-CFG-002)
-./jitllm serve -m beehive-llama-3.2-1b-instruct-fp16.gguf --gpu --gpu-memory 14GB --port 8090
+./jitllm serve -m gemma-4-E2B-it-Q4_0.gguf --gpu --gpu-memory 14GB --port 8090
 ```
 
 ## 2. Build and install the plugin
