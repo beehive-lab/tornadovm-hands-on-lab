@@ -6,6 +6,7 @@ demos/L04-tornadovmpulse/TornadoVMPulse/
 demos/L05-tornadoviz/bytecodes-jitllm/
 demos/L05-tornadoviz/TornadoViz/
 demos/*/jitllm.log
+demos/L09-jitllm-profiling/jitllm*
 demos/L03-tornadoinsight/target/
 logs/
 # models are downloaded, never committed
