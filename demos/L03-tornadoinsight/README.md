@@ -37,10 +37,10 @@ In IntelliJ, open [`pom.xml`](pom.xml) in this folder as a project (`File → Op
 
 ### From the command line
 
-The class's own `main` runs `fixed` and checks the GPU result against plain Java:
+The class's own `main` runs `fixed` and checks the GPU result against plain Java. The Maven wrapper `./mvnw` downloads Maven on first use, so no Maven install is needed:
 
 ```bash
-mvn -q compile
+./mvnw -q compile
 tornado --printKernel -cp target/classes uk.ac.manchester.tornado.examples.tornadoinsight.RecursionExample 1024
 # ends with: Result is correct for 1024 elements.
 ```
