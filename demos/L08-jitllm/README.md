@@ -22,9 +22,10 @@ Check `jbang jitllm@beehive-lab --help` for the memory option on this path; the 
 
 ## Build from source
 
-Building jitLLM from a clone needs TornadoVM **develop** artifacts, which neither the 7.0.1 SDK nor Maven Central provides. The repo's helper prepares them for your platform:
+Building jitLLM from a clone needs TornadoVM **develop** artifacts, which neither the 7.0.1 SDK nor Maven Central provides. The repo's helper prepares them for your platform. It builds for JDK 21 and stops with `the java on JAVA_HOME/PATH is 25` while the lab's JDK 25 is selected, so switch this shell to JDK 21 first and keep it for the build and every `./jitllm` run:
 
 ```bash
+sdk install java 21.0.2-open && sdk use java 21.0.2-open    # this shell only
 git clone https://github.com/beehive-lab/jitllm.git && cd jitllm
 scripts/tornadovm-dev.sh setup --backend metal  --jdk 21    # macOS
 scripts/tornadovm-dev.sh setup --backend cuda   --jdk 21    # Linux, NVIDIA

@@ -17,7 +17,7 @@ M=gemma-4-E2B-it-Q4_0.gguf
 ./jitllm --gpu --model $M --prompt "..." --print-bytecodes
 ```
 
-On Metal, a source build of jitLLM refuses an FP16 key/value cache for F16 Llama models (`GPUL-CFG-002`); add `--fp32-kv-cache` to both commands. The JBang release in L08 does not need it.
+If you swap in an F16 Llama model on Metal, a source build of jitLLM refuses an FP16 key/value cache for it (`GPUL-CFG-002`); add `--fp32-kv-cache` to both commands. The JBang release in L08 does not need it.
 
 All profiler options are grouped under "Debug and Profiling" in `./jitllm --help`.
 

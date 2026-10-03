@@ -14,10 +14,12 @@ IntelliJ talks to jitLLM over its OpenAI-compatible endpoint, on your own GPU.
 
 ```bash
 git clone -b feature/stream-usage https://github.com/beehive-lab/jitllm.git && cd jitllm
-# build as in L08 (scripts/tornadovm-dev.sh), then:
-# on Metal, add --fp32-kv-cache: a source build refuses an FP16 key/value cache for F16 Llama (GPUL-CFG-002)
+# build as in L08 (JDK 21, scripts/tornadovm-dev.sh), then:
 ./jitllm serve -m gemma-4-E2B-it-Q4_0.gguf --gpu --gpu-memory 14GB --port 8090
+curl -s localhost:8090/v1/models     # "id": "gemma-4-E2B-it-Q4_0"
 ```
+
+Gemma 4 E2B (`gemma-4-E2B-it-Q4_0.gguf`, download in [L08](../L08-jitllm/README.md)) is the preferred model for this demo. If you serve an F16 Llama model on Metal instead, add `--fp32-kv-cache`: a source build refuses an FP16 key/value cache for it (`GPUL-CFG-002`).
 
 ## 2. Build and install the plugin
 
@@ -33,7 +35,7 @@ In IntelliJ: `Settings → Plugins → ⚙ → Install Plugin from Disk`, pick t
 
 ## 3. Wire it up
 
-In the DevoxxGenie settings, choose provider **Custom OpenAI**, base URL `http://localhost:8090/v1`, and any non-empty API key. Then select a method, ask for a test, and watch jitLLM stream the answer.
+In the DevoxxGenie settings, choose provider **Custom OpenAI**, base URL `http://localhost:8090/v1`, any non-empty API key, and model `gemma-4-E2B-it-Q4_0`. The server loads one model and rejects requests for any other name (`This server serves '…', not '…'`), so the model must match the `id` from `/v1/models`. Then select a method, ask for a test, and watch jitLLM stream the answer.
 
 Field labels move between plugin versions; check them on the day.
 
