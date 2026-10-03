@@ -14,11 +14,19 @@ A dashboard for the TornadoVM profiler's output.
 ./run.sh          # writes profile.json next to this README
 ```
 
-With jitLLM as the workload instead of `VectorAddInt`, using its source build from [L08](../L08-jitllm/README.md) (JDK 21):
+With jitLLM as the workload instead of `VectorAddInt`, run `run-jitllm.sh`. The script needs the two folders from L08's [Where things go](../L08-jitllm/README.md#where-things-go):
+
+- `JITLLM_ROOT`: the jitLLM clone you built in L08. It holds the `jitllm` launcher and `target/jitllm-*.jar`.
+- `JITLLM_MODEL_DIR`: the folder you downloaded `gemma-4-E2B-it-Q4_0.gguf` into.
 
 ```bash
-JITLLM_ROOT=~/jitllm JITLLM_MODEL_DIR=~/models ./run-jitllm.sh    # writes profile-jitllm.json; optional arg: max new tokens (default 30)
+ls "$JITLLM_ROOT/jitllm" "$JITLLM_ROOT"/target/jitllm-*.jar "$JITLLM_MODEL_DIR/gemma-4-E2B-it-Q4_0.gguf"   # all three must exist
+
+./run-jitllm.sh    # if you exported both in this terminal (L08); writes profile-jitllm.json
+JITLLM_ROOT=~/repositories/jitllm JITLLM_MODEL_DIR=/opt/models ./run-jitllm.sh    # or name them for this run only, e.g. a clone in ~/repositories/jitllm and models in /opt/models
 ```
+
+An optional argument sets the number of tokens to generate (default 30). The jar in the clone decides the JDK: a `jdk21` jar from `tornadovm-dev.sh` needs JDK 21 and runs on that develop build; any other needs JDK 22+ and runs on the SDK in `TORNADOVM_HOME`. If something is missing, the script says which path or version it found.
 
 The output grows with every generated token, so keep the run short. jitLLM's console output goes to `jitllm.log`.
 

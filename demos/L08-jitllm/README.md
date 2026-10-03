@@ -9,13 +9,31 @@ An LLM inference engine in Java; TornadoVM compiles its kernels for Metal, OpenC
 | Code | [beehive-lab/jitllm](https://github.com/beehive-lab/jitllm) |
 | Model | [`gemma-4-E2B-it-Q4_0.gguf`](https://huggingface.co/unsloth/gemma-4-E2B-it-GGUF/resolve/main/gemma-4-E2B-it-Q4_0.gguf) (Gemma 4 E2B instruct, Q4_0, 3GB) |
 
+## Where things go
+
+jitLLM needs two folders: one for the jitLLM clone, one for the model. Choose them once; L08–L10 use them, and so do the jitLLM scripts in L04, L05 and L09 (`run-jitllm.sh`, `run-nsys.sh`), which read them from `JITLLM_ROOT` and `JITLLM_MODEL_DIR`:
+
+```bash
+export JITLLM_ROOT=$HOME/jitllm                       # the jitLLM clone; it is built and run from here
+export JITLLM_MODEL_DIR=$HOME/models                  # the folder the model is downloaded into
+export M=$JITLLM_MODEL_DIR/gemma-4-E2B-it-Q4_0.gguf   # the model file itself
+```
+
+Any folders work. If you already have a clone in `~/repositories/jitllm`, or models in `/opt/models`, point the variables there instead. `export` keeps them for the rest of this terminal; in a new terminal, run the three lines again.
+
+## Download the model
+
+```bash
+mkdir -p "$JITLLM_MODEL_DIR"
+curl -L -o "$M" https://huggingface.co/unsloth/gemma-4-E2B-it-GGUF/resolve/main/gemma-4-E2B-it-Q4_0.gguf
+ls -lh "$M"                                           # about 2.9GB
+```
+
 ## Run without building (released SDK + JBang)
 
 ```bash
 curl -Ls https://sh.jbang.dev | bash -s - app setup      # once
-curl -L -O https://huggingface.co/unsloth/gemma-4-E2B-it-GGUF/resolve/main/gemma-4-E2B-it-Q4_0.gguf
-M=gemma-4-E2B-it-Q4_0.gguf
-jbang jitllm@beehive-lab -m $M -p "Explain GPU acceleration in one sentence."
+jbang jitllm@beehive-lab -m "$M" -p "Explain GPU acceleration in one sentence."
 ```
 
 Check `jbang jitllm@beehive-lab --help` for the memory option on this path; the flags below are for the `./jitllm` launcher.
@@ -26,7 +44,7 @@ Building jitLLM from a clone needs TornadoVM **develop** artifacts, which neithe
 
 ```bash
 sdk install java 21.0.2-open && sdk use java 21.0.2-open    # this shell only
-git clone https://github.com/beehive-lab/jitllm.git && cd jitllm
+git clone https://github.com/beehive-lab/jitllm.git "$JITLLM_ROOT" && cd "$JITLLM_ROOT"
 scripts/tornadovm-dev.sh setup --backend metal  --jdk 21    # macOS
 scripts/tornadovm-dev.sh setup --backend cuda   --jdk 21    # Linux, NVIDIA
 scripts/tornadovm-dev.sh setup --backend opencl --jdk 21    # Linux, Intel or AMD
@@ -37,9 +55,10 @@ eval "$(scripts/tornadovm-dev.sh env)"                       # TORNADOVM_HOME + 
 ## Run
 
 ```bash
-./jitllm --gpu --verbose --gpu-memory 14GB --model $M \
+cd "$JITLLM_ROOT"
+./jitllm --gpu --verbose --gpu-memory 14GB --model "$M" \
     --prompt "Explain the benefits of GPU acceleration."
-./jitllm serve -m $M --gpu --gpu-memory 14GB --port 8090     # OpenAI-compatible, used by L10
+./jitllm serve -m "$M" --gpu --gpu-memory 14GB --port 8090   # OpenAI-compatible, used by L10
 ```
 
 The backend is detected from the SDK. On an SDK with several backends, force one with `--metal`, `--cuda` or `--opencl`.

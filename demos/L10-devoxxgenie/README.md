@@ -14,8 +14,8 @@ IntelliJ talks to jitLLM over its OpenAI-compatible endpoint, on your own GPU.
 
 ```bash
 git clone -b feature/stream-usage https://github.com/beehive-lab/jitllm.git && cd jitllm
-# build as in L08 (JDK 21, scripts/tornadovm-dev.sh), then:
-./jitllm serve -m gemma-4-E2B-it-Q4_0.gguf --gpu --gpu-memory 14GB --port 8090
+# build as in L08 (JDK 21, scripts/tornadovm-dev.sh); M is the model path from L08's Where things go
+./jitllm serve -m "$M" --gpu --gpu-memory 14GB --port 8090
 curl -s localhost:8090/v1/models     # "id": "gemma-4-E2B-it-Q4_0"
 ```
 
