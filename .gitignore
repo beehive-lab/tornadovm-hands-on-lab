@@ -1,6 +1,9 @@
 # outputs written by the demo scripts
 demos/L04-tornadovmpulse/profile.json
 demos/L05-tornadoviz/bytecodes/
+demos/L04-tornadovmpulse/profile-jitllm.json
+demos/L05-tornadoviz/bytecodes-jitllm/
+demos/*/jitllm.log
 demos/L03-tornadoinsight/target/
 logs/
 # models are downloaded, never committed

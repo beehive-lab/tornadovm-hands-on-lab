@@ -16,6 +16,14 @@ See the task graph, its transfers and every object's lifetime.
 
 `--dumpBC DIR` sets `-Dtornado.print.bytecodes` and `-Dtornado.dump.bytecodes.dir` for you.
 
+With jitLLM as the workload instead of `VectorAddInt`, using its source build from [L08](../L08-jitllm/README.md) (JDK 21):
+
+```bash
+JITLLM_ROOT=~/jitllm JITLLM_MODEL_DIR=~/models ./run-jitllm.sh    # writes bytecodes-jitllm/; optional arg: max new tokens (default 10)
+```
+
+The output grows with every generated token, so keep the run short. jitLLM's console output goes to `jitllm.log`.
+
 ## 2. Build and run the visualizer
 
 ```bash

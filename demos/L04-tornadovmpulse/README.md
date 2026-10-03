@@ -14,6 +14,14 @@ A dashboard for the TornadoVM profiler's output.
 ./run.sh          # writes profile.json next to this README
 ```
 
+With jitLLM as the workload instead of `VectorAddInt`, using its source build from [L08](../L08-jitllm/README.md) (JDK 21):
+
+```bash
+JITLLM_ROOT=~/jitllm JITLLM_MODEL_DIR=~/models ./run-jitllm.sh    # writes profile-jitllm.json; optional arg: max new tokens (default 30)
+```
+
+The output grows with every generated token, so keep the run short. jitLLM's console output goes to `jitllm.log`.
+
 ## 2. Build and run the dashboard
 
 ```bash
