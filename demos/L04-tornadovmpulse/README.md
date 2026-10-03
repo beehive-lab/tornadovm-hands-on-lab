@@ -25,9 +25,15 @@ The output grows with every generated token, so keep the run short. jitLLM's con
 ## 2. Build and run the dashboard
 
 ```bash
+./tornadovm-pulse.sh          # extra arguments go to streamlit, e.g. --server.port 8502
+```
+
+It prints each command before running it, and skips the steps already done: it clones TornadoVMPulse next to this README, installs its requirements in `TornadoVMPulse/.venv` (a system-wide `pip install` is refused on Pythons marked externally managed), and starts the dashboard. By hand, the steps are:
+
+```bash
 git clone https://github.com/beehive-lab/TornadoVMPulse.git && cd TornadoVMPulse
-pip install -r requirements.txt
-streamlit run src/app.py
+python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+.venv/bin/streamlit run src/app.py
 ```
 
 Upload `profile.json` in the browser. Raw JSON or log files are converted to CSV automatically; the time unit (ns, ms, s) is in the sidebar.

@@ -27,12 +27,18 @@ The output grows with every generated token, so keep the run short. jitLLM's con
 ## 2. Build and run the visualizer
 
 ```bash
-git clone https://github.com/beehive-lab/TornadoViz.git && cd TornadoViz
-pip install -r requirements.txt
-streamlit run tornado-visualizer-fixed.py
+./tornadoviz.sh          # extra arguments go to streamlit, e.g. --server.port 8502
 ```
 
-Load the dump in the browser.
+It prints each command before running it, and skips the steps already done: it clones TornadoViz next to this README, installs its requirements in `TornadoViz/.venv` (a system-wide `pip install` is refused on Pythons marked externally managed), and starts the visualizer. By hand, the steps are:
+
+```bash
+git clone https://github.com/beehive-lab/TornadoViz.git && cd TornadoViz
+python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+.venv/bin/streamlit run tornado-visualizer-fixed.py
+```
+
+Load the dump in the browser: `bytecodes/` from `run.sh`, or `bytecodes-jitllm/tornadovm_bytecodes.log` from `run-jitllm.sh`.
 
 ## What to look for
 
