@@ -4,7 +4,7 @@ The TornadoVM flags from the MacBook part (L02, L04), applied to a real workload
 
 | | |
 |---|---|
-| Platforms | macOS · Metal, Linux · CUDA, Linux · OpenCL |
+| Platforms | macOS · Metal, Linux · CUDA, Linux · OpenCL; the Nsight Systems part needs an NVIDIA GPU (Linux · CUDA) |
 | GPU memory | as L08: 14GB budget by default, see [GPU memory](../L08-jitllm/README.md#gpu-memory) |
 | Code | [beehive-lab/jitllm](https://github.com/beehive-lab/jitllm); build it as in [L08](../L08-jitllm/README.md) |
 | Note | backup demo: its slide is hidden in the current deck |
@@ -22,6 +22,8 @@ If you swap in an F16 Llama model on Metal, a source build of jitLLM refuses an 
 All profiler options are grouped under "Debug and Profiling" in `./jitllm --help`.
 
 ## Profile it with Nsight Systems (Linux · CUDA)
+
+This part needs an NVIDIA GPU and a TornadoVM build with the CUDA backend. Nsight Systems records CUDA activity, so on Metal, or on OpenCL even with an NVIDIA card, it finds no kernels; `run-nsys.sh` stops with a message if the backend is not CUDA. Nsight Systems ships with the CUDA toolkit.
 
 The script needs the two folders from L08's [Where things go](../L08-jitllm/README.md#where-things-go):
 

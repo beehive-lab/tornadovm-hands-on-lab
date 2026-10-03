@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# L09 · jitLLM under Nsight Systems: writes a .nsys-rep and prints the kernel summary  ·  Linux · CUDA
+# L09 · jitLLM under Nsight Systems: writes a .nsys-rep and prints the kernel summary  ·  NVIDIA GPU, CUDA backend
 #   ./run-nsys.sh [--cuda-graphs] [max-new-tokens]    default 30 tokens
 #     (default)       jitllm.nsys-rep: one kernel launch at a time
 #     --cuda-graphs   jitllm-graphs.nsys-rep: each token replayed as one CUDA graph; nsys traces
@@ -21,6 +21,10 @@ if [ "${1:-}" = --cuda-graphs ]; then
 fi
 TOKENS="${1:-30}"
 
+# Nsight Systems records CUDA activity: with Metal or OpenCL it would find no kernels.
+BACKENDS="$(sed -n 's/^tornado\.backends=//p' "$TORNADOVM_HOME/etc/tornado.backend" 2>/dev/null || true)"
+[[ "$BACKENDS" == *cuda* ]] \
+  || die "run-nsys.sh needs an NVIDIA GPU and TornadoVM's CUDA backend; ${TORNADOVM_HOME} has: ${BACKENDS:-no backend file}"
 command -v nsys >/dev/null 2>&1 \
   || die "nsys not found: Nsight Systems ships with the CUDA toolkit (Linux · NVIDIA), e.g. /usr/local/cuda/bin"
 

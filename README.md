@@ -32,13 +32,13 @@ All versions, repositories, branches and memory budgets are pinned in [`env/vers
 | [L06](demos/L06-cuda-tilecontext) | GEMM: CUDA TileContext, Metal simdgroup | 88 | ◐ simdgroup GEMM | ✓ | ◐ portable GEMM | < 100 MB | this repo |
 | [L07](demos/L07-hybrid-cublas) | Hybrid API with cuBLAS | 93 | ✗ | ✓ | ✗ | a few MB | [cuda-demos](https://github.com/beehive-lab/tornadovm-devoxx2026-cuda-demos) demo 04 |
 | [L08](demos/L08-jitllm) | jitLLM on your own GPU | 103 | ✓ | ✓ | ✓ | **14GB** default | [jitllm](https://github.com/beehive-lab/jitllm) |
-| [L09](demos/L09-jitllm-profiling) | jitLLM, then profile it | 104 (hidden) | ✓ | ✓ | ✓ | **14GB** default | [jitllm](https://github.com/beehive-lab/jitllm) |
+| [L09](demos/L09-jitllm-profiling) | jitLLM, then profile it | 104 (hidden) | ◐ no Nsight Systems | ✓ | ◐ no Nsight Systems | **14GB** default | [jitllm](https://github.com/beehive-lab/jitllm) |
 | [L10](demos/L10-devoxxgenie) | DevoxxGenie: a local LLM inside your IDE | 108 | ✓ | ✓ | ✓ | **14GB** default | [jitllm](https://github.com/beehive-lab/jitllm/tree/feature/stream-usage) + [DevoxxGenie fork](https://github.com/stratika/DevoxxGenieIDEAPlugin/tree/feature/jitllm-openai-server) |
 | [L11](demos/L11-flink-sql-gpu) | An SQL operator on the GPU | 111 | ✗ | ✓ | ✗ | TODO | `flink-accelerator-tornadovm` (not public yet) |
 | [L12](demos/L12-flink-fleet-triage) | Fleet telemetry triage | 114 | ✗ | ✓ | ✗ | TODO | `flink-accelerator-tornadovm` (not public yet) |
 | [L13](demos/L13-kotlin) | TornadoVM for Kotlin (WIP) | 117 | ✓ | ✓ | ✓ | < 100 MB | [TornadoVM PR #1123](https://github.com/beehive-lab/TornadoVM/pull/1123) |
 
-The ✗ entries come from what the demo uses: cuBLAS (L07) is an NVIDIA library, and RAPIDS cuDF (L11, L12) runs on Linux with NVIDIA GPUs. Support marked ✓ or ◐ follows what each demo's code requires; rehearse it on every platform before relying on it.
+The ✗ entries come from what the demo uses: cuBLAS (L07) is an NVIDIA library, and RAPIDS cuDF (L11, L12) runs on Linux with NVIDIA GPUs. L09's Nsight Systems part records CUDA activity, so it needs an NVIDIA GPU with the CUDA backend. Support marked ✓ or ◐ follows what each demo's code requires; rehearse it on every platform before relying on it.
 
 ## GPU memory
 
