@@ -56,7 +56,7 @@ eval "$(scripts/tornadovm-dev.sh env)"                       # TORNADOVM_HOME + 
 
 ```bash
 cd "$JITLLM_ROOT"
-./jitllm --gpu --verbose --gpu-memory 14GB --model "$M" \
+./jitllm --gpu --verbose --print-taskgraph-chain --gpu-memory 14GB --model "$M" \
     --prompt "Explain the benefits of GPU acceleration."
 ./jitllm serve -m "$M" --gpu --gpu-memory 14GB --port 8090   # OpenAI-compatible, used by L10
 ```
@@ -81,6 +81,7 @@ jitLLM reserves a device budget up front. The lab's default is `JITLLM_GPU_MEMOR
 
 - The pause before the first token is one-time JIT compilation, not the model.
 - `--verbose` prints the device, the TornadoVM version and the GPU allocation budget before generating.
+- `--print-taskgraph-chain` prints the execution plan's TaskGraphs: when each runs and its tasks, each a kernel with its worker grid or a `libraryTask` for a cuBLAS/cuDNN call. Repeated layer graphs are shown once. It needs `--gpu`.
 - `serve` exposes `/v1/chat/completions`, which DevoxxGenie uses in L10.
 
 If the build fights you on Linux, the fallback is the `beehivelab/gpullama3.java-nvidia-openjdk-opencl` Docker image.
