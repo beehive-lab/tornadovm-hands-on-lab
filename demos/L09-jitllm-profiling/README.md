@@ -1,6 +1,6 @@
 # L09 · jitLLM, then profile it
 
-The TornadoVM flags from the MacBook part (L02, L07), applied to a real workload.
+The TornadoVM flags that L02 and L07 run on `VectorAddInt`, applied to a real workload.
 
 | | |
 |---|---|
