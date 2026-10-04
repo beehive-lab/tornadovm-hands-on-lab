@@ -12,9 +12,9 @@ Install the TornadoVM SDK in one line, run a built-in example, and generate the 
 
 ```bash
 sdk list tornadovm
-sdk install tornadovm 7.0.1-jdk22plus-metal     # macOS
-sdk install tornadovm 7.0.1-jdk22plus-cuda      # Linux, NVIDIA
-sdk install tornadovm 7.0.1-jdk22plus-opencl    # Linux, Intel or AMD
+sdk install tornadovm 7.1.0-jdk22plus-metal     # macOS
+sdk install tornadovm 7.1.0-jdk22plus-cuda      # Linux, NVIDIA
+sdk install tornadovm 7.1.0-jdk22plus-opencl    # Linux, Intel or AMD
 ```
 
 ## Run
@@ -25,7 +25,7 @@ sdk install tornadovm 7.0.1-jdk22plus-opencl    # Linux, Intel or AMD
 
 ## What to look for
 
-- `sdk list tornadovm` shows the version grid: 7.0.1 × `jdk21` / `jdk22plus` × `opencl`, `cuda`, `metal`.
+- `sdk list tornadovm` shows the version grid: 7.1.0 × `jdk21` / `jdk22plus` × `opencl`, `cuda`, `metal`.
 - `tornado --devices` lists devices as `backend:device` (for example `0:0`); that index is what `-Dtornado.device` takes later.
 - `VectorAddInt` runs clean. That is the checkpoint before moving on.
 

@@ -33,4 +33,4 @@ Arguments are `<m> <n> <iterations>` (defaults `8 8 5`). The plain-`java` form i
 - The profiler: all three stages report the same CUDA device. Every iteration prints `correct`.
 - The bytecodes: one graph capture, then replays with the same graph id.
 
-The CUDA demos repo selects its SDK in `env/versions.env` (`TORNADO_SDK_PROFILE`), which defaults to **7.0.0**, while this lab uses 7.0.1. Check which one `setup-env.sh` picked before running the demo.
+The CUDA demos repo selects its SDK in `env/versions.env` (`TORNADO_SDK_PROFILE`), which defaults to **7.0.0**, while this lab uses 7.1.0. Check which one `setup-env.sh` picked before running the demo.

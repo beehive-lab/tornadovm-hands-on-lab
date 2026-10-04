@@ -18,7 +18,7 @@ The deck shows this on CUDA with `TileContext`. To keep it reproducible everywhe
 ## Setup for the CUDA variant
 
 ```bash
-sdk install tornadovm 7.0.1-jdk22plus-cuda
+sdk install tornadovm 7.1.0-jdk22plus-cuda
 pip install --user nvidia-cuda-nvcc 'cuda-tile[tileiras]' nvidia-cuda-cccl
 ```
 

@@ -8,9 +8,9 @@ Demos whose code already lives in another repository get a README here with the 
 
 ```bash
 sdk install java 25.0.2-open
-sdk install tornadovm 7.0.1-jdk22plus-metal      # macOS, Apple Silicon
-sdk install tornadovm 7.0.1-jdk22plus-cuda       # Linux, NVIDIA
-sdk install tornadovm 7.0.1-jdk22plus-opencl     # Linux, Intel or AMD
+sdk install tornadovm 7.1.0-jdk22plus-metal      # macOS, Apple Silicon
+sdk install tornadovm 7.1.0-jdk22plus-cuda       # Linux, NVIDIA
+sdk install tornadovm 7.1.0-jdk22plus-opencl     # Linux, Intel or AMD
 
 scripts/check-env.sh       # SDK, backends, GPUs and their memory, demos that apply here
 scripts/run-all.sh         # every scripted demo, with PASS / SKIP / FAIL per demo
@@ -62,8 +62,8 @@ On a GPU smaller than a budget, lower it. jitLLM then reports how much the model
 - [ ] Publish `flink-accelerator-tornadovm` (L11, L12), or move its scripts here.
 - [ ] Add the download URL for Qwen3-0.6B FP16 (L12).
 - [ ] Pin commits for every external repository in `env/versions.env`.
-- [ ] Confirm that jitLLM `feature/stream-usage` works with the 7.0.1 SDK (L10); a source build needs TornadoVM develop.
-- [ ] Confirm L05 runs with the 7.0.1 SDK; the CUDA demos repository defaults to 7.0.0.
+- [ ] Confirm that jitLLM `feature/stream-usage` works with the 7.1.0 SDK (L10); a source build needs TornadoVM develop.
+- [ ] Confirm L05 runs with the 7.1.0 SDK; the CUDA demos repository defaults to 7.0.0.
 
 ## Layout
 
