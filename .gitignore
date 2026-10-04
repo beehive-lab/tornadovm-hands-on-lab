@@ -1,10 +1,10 @@
 # outputs written by the demo scripts
-demos/L04-tornadovmpulse/profile.json
-demos/L05-tornadoviz/bytecodes/
-demos/L04-tornadovmpulse/profile-jitllm.json
-demos/L04-tornadovmpulse/TornadoVMPulse/
-demos/L05-tornadoviz/bytecodes-jitllm/
-demos/L05-tornadoviz/TornadoViz/
+demos/L07-tornadovmpulse/profile.json
+demos/L08-tornadoviz/bytecodes/
+demos/L07-tornadovmpulse/profile-jitllm.json
+demos/L07-tornadovmpulse/TornadoVMPulse/
+demos/L08-tornadoviz/bytecodes-jitllm/
+demos/L08-tornadoviz/TornadoViz/
 demos/*/jitllm.log
 demos/L09-jitllm-profiling/jitllm*
 demos/L03-tornadoinsight/target/

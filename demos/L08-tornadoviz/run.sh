@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# L05 · TornadoViz: writes the bytecode log for the visualizer  ·  any backend
+# L08 · TornadoViz: writes the bytecode log for the visualizer  ·  any backend
 set -euo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
 source "$HERE/../../scripts/lib.sh"

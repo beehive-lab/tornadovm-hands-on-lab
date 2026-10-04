@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# L04 · TornadoVMPulse: writes profile.json for the dashboard  ·  any backend
+# L07 · TornadoVMPulse: writes profile.json for the dashboard  ·  any backend
 set -euo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
 source "$HERE/../../scripts/lib.sh"

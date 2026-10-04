@@ -1,4 +1,4 @@
-# Shared by the dashboard scripts (L04 tornadovm-pulse.sh, L05 tornadoviz.sh). Source it; do not run it.
+# Shared by the dashboard scripts (L07 tornadovm-pulse.sh, L08 tornadoviz.sh). Source it; do not run it.
 # streamlit_app REPO DIR APP HINT [streamlit options]: clones REPO into DIR, installs its requirements
 # in DIR/.venv (the system Python may refuse pip installs, PEP 668), and runs APP with streamlit.
 # Steps already done are skipped; every command is printed before it runs.

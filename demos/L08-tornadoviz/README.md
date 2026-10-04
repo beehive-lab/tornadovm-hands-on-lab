@@ -1,4 +1,4 @@
-# L05 · TornadoViz
+# L08 · TornadoViz
 
 See the task graph, its transfers and every object's lifetime.
 
@@ -16,15 +16,15 @@ See the task graph, its transfers and every object's lifetime.
 
 `--dumpBC DIR` sets `-Dtornado.print.bytecodes` and `-Dtornado.dump.bytecodes.dir` for you.
 
-With jitLLM as the workload instead of `VectorAddInt`, run `run-jitllm.sh`. The script needs the two folders from L08's [Where things go](../L08-jitllm/README.md#where-things-go):
+With jitLLM as the workload instead of `VectorAddInt`, run `run-jitllm.sh`. The script needs the two folders from L06's [Where things go](../L06-jitllm/README.md#where-things-go):
 
-- `JITLLM_ROOT`: the jitLLM clone you built in L08. It holds the `jitllm` launcher and `target/jitllm-*.jar`.
+- `JITLLM_ROOT`: the jitLLM clone you built in L06. It holds the `jitllm` launcher and `target/jitllm-*.jar`.
 - `JITLLM_MODEL_DIR`: the folder you downloaded `gemma-4-E2B-it-Q4_0.gguf` into.
 
 ```bash
 ls "$JITLLM_ROOT/jitllm" "$JITLLM_ROOT"/target/jitllm-*.jar "$JITLLM_MODEL_DIR/gemma-4-E2B-it-Q4_0.gguf"   # all three must exist
 
-./run-jitllm.sh    # if you exported both in this terminal (L08); writes bytecodes-jitllm/
+./run-jitllm.sh    # if you exported both in this terminal (L06); writes bytecodes-jitllm/
 JITLLM_ROOT=~/repositories/jitllm JITLLM_MODEL_DIR=/opt/models ./run-jitllm.sh    # or name them for this run only, e.g. a clone in ~/repositories/jitllm and models in /opt/models
 ```
 

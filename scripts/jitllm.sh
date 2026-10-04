@@ -1,6 +1,6 @@
 # Shared by the run-jitllm.sh scripts: jitLLM from a source build as the demo workload.
 # Source it; do not run it. Needs:
-#   JITLLM_ROOT       a built jitLLM clone (demos/L08-jitllm)
+#   JITLLM_ROOT       a built jitLLM clone (demos/L06-jitllm)
 #   JITLLM_MODEL_DIR  the directory holding $JITLLM_MODEL (default: the current directory)
 # The jar decides the rest:
 #   jitllm-*-jdk21.jar      built with scripts/tornadovm-dev.sh: JDK 21 and that TornadoVM develop build
@@ -11,7 +11,7 @@ source "$ROOT/env/versions.env"
 note() { echo "-- $*"; }
 die() { echo "ERROR: $*" >&2; exit 1; }
 
-[ -n "${JITLLM_ROOT:-}" ] || die "set JITLLM_ROOT to a built jitLLM clone (demos/L08-jitllm)"
+[ -n "${JITLLM_ROOT:-}" ] || die "set JITLLM_ROOT to a built jitLLM clone (demos/L06-jitllm)"
 [ -x "$JITLLM_ROOT/jitllm" ] || die "JITLLM_ROOT=$JITLLM_ROOT has no jitllm launcher; is it a jitLLM clone?"
 MODEL="${JITLLM_MODEL_DIR:-$PWD}/$JITLLM_MODEL"
 [ -f "$MODEL" ] || die "model not found: $MODEL
@@ -24,7 +24,7 @@ for f in "$JITLLM_ROOT"/target/jitllm-*-SNAPSHOT.jar; do [ -e "$f" ] && JAR=$f; 
 if [ -z "$JAR" ]; then
   for f in "$JITLLM_ROOT"/target/jitllm-*.jar; do [ -e "$f" ] && JAR=$f; done
 fi
-[ -n "$JAR" ] || die "no jar in $JITLLM_ROOT/target; build jitLLM as in demos/L08-jitllm"
+[ -n "$JAR" ] || die "no jar in $JITLLM_ROOT/target; build jitLLM as in demos/L06-jitllm"
 
 JAVA_VERSION="$(java -XshowSettings:properties -version 2>&1 | sed -n 's/^ *java\.specification\.version = //p')"
 case "$JAR" in
@@ -33,7 +33,7 @@ case "$JAR" in
       || die "${JAR##*/} needs JDK 21, found ${JAVA_VERSION:-no java}: sdk use java 21.0.2-open"
     # TORNADOVM_HOME and PATH of the TornadoVM develop build that jitLLM was built against.
     DEV_ENV="$("$JITLLM_ROOT/scripts/tornadovm-dev.sh" env 2>/dev/null)" \
-      || die "${JAR##*/} needs the TornadoVM develop build; prepare it as in demos/L08-jitllm"
+      || die "${JAR##*/} needs the TornadoVM develop build; prepare it as in demos/L06-jitllm"
     eval "$DEV_ENV"
     ;;
   *)

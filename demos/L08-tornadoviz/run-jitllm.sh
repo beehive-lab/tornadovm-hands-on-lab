@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# L05 · TornadoViz with jitLLM as the workload: writes the bytecode log to bytecodes-jitllm/  ·  any backend
+# L08 · TornadoViz with jitLLM as the workload: writes the bytecode log to bytecodes-jitllm/  ·  any backend
 #   ./run-jitllm.sh [max-new-tokens]    default 10; the log grows with every token
 set -euo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"

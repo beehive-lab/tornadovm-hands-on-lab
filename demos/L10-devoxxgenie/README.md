@@ -5,21 +5,21 @@ IntelliJ talks to jitLLM over its OpenAI-compatible endpoint, on your own GPU.
 | | |
 |---|---|
 | Platforms | macOS · Metal, Linux · CUDA, Linux · OpenCL, with IntelliJ IDEA |
-| GPU memory | as L08: 14GB budget by default, see [GPU memory](../L08-jitllm/README.md#gpu-memory) |
+| GPU memory | as L06: 14GB budget by default, see [GPU memory](../L06-jitllm/README.md#gpu-memory) |
 | Engine | [beehive-lab/jitllm](https://github.com/beehive-lab/jitllm/tree/feature/stream-usage), branch `feature/stream-usage` |
 | Plugin | [stratika/DevoxxGenieIDEAPlugin](https://github.com/stratika/DevoxxGenieIDEAPlugin/tree/feature/jitllm-openai-server), branch `feature/jitllm-openai-server` |
-| Runtime | the TornadoVM build from L08 (the deck shows `7.0.1-jdk22plus-cuda`) |
+| Runtime | the TornadoVM build from L06 (the deck shows `7.0.1-jdk22plus-cuda`) |
 
 ## 1. Build and start the engine
 
 ```bash
 git clone -b feature/stream-usage https://github.com/beehive-lab/jitllm.git && cd jitllm
-# build as in L08 (JDK 21, scripts/tornadovm-dev.sh); M is the model path from L08's Where things go
+# build as in L06 (JDK 21, scripts/tornadovm-dev.sh); M is the model path from L06's Where things go
 ./jitllm serve -m "$M" --gpu --gpu-memory 14GB --port 8090
 curl -s localhost:8090/v1/models     # "id": "gemma-4-E2B-it-Q4_0"
 ```
 
-Gemma 4 E2B (`gemma-4-E2B-it-Q4_0.gguf`, download in [L08](../L08-jitllm/README.md)) is the preferred model for this demo. If you serve an F16 Llama model on Metal instead, add `--fp32-kv-cache`: a source build refuses an FP16 key/value cache for it (`GPUL-CFG-002`).
+Gemma 4 E2B (`gemma-4-E2B-it-Q4_0.gguf`, download in [L06](../L06-jitllm/README.md)) is the preferred model for this demo. If you serve an F16 Llama model on Metal instead, add `--fp32-kv-cache`: a source build refuses an FP16 key/value cache for it (`GPUL-CFG-002`).
 
 ## 2. Build and install the plugin
 
@@ -39,4 +39,4 @@ In the DevoxxGenie settings, choose provider **Custom OpenAI**, base URL `http:/
 
 Field labels move between plugin versions; check them on the day.
 
-**Known issue:** building `feature/stream-usage` from source needs TornadoVM develop artifacts (see L08), while the slide pairs it with the 7.0.1 SDK. Confirm the pairing before the session.
+**Known issue:** building `feature/stream-usage` from source needs TornadoVM develop artifacts (see L06), while the slide pairs it with the 7.0.1 SDK. Confirm the pairing before the session.

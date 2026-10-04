@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# L06 · GEMM on each backend's matrix hardware
+# L04 · GEMM on each backend's matrix hardware
 #   every backend: the portable @Parallel GEMM
 #   metal:         Apple simdgroup_float8x8 matrix units (KernelContext.matrixMultiply8x8)
 #   cuda:          the same GEMM with @Parallel, KernelContext and TileContext (CUDA 13.3+, sm_80+)

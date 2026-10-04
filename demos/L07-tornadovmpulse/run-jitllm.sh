@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# L04 · TornadoVMPulse with jitLLM as the workload: writes profile-jitllm.json  ·  any backend
+# L07 · TornadoVMPulse with jitLLM as the workload: writes profile-jitllm.json  ·  any backend
 #   ./run-jitllm.sh [max-new-tokens]    default 30; the profile grows with every token
 set -euo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"

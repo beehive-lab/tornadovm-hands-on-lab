@@ -1,4 +1,4 @@
-# L06 · GEMM on each backend's matrix hardware
+# L04 · GEMM on each backend's matrix hardware
 
 The deck shows this on CUDA with `TileContext`. To keep it reproducible everywhere, `run.sh` runs a portable GEMM on every backend, then the variant that uses that backend's own matrix hardware.
 

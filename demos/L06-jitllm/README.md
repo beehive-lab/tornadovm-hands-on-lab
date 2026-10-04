@@ -1,4 +1,4 @@
-# L08 · jitLLM on your own GPU
+# L06 · jitLLM on your own GPU
 
 An LLM inference engine in Java; TornadoVM compiles its kernels for Metal, OpenCL or CUDA, picked from your SDK.
 
@@ -11,7 +11,7 @@ An LLM inference engine in Java; TornadoVM compiles its kernels for Metal, OpenC
 
 ## Where things go
 
-jitLLM needs two folders: one for the jitLLM clone, one for the model. Choose them once; L08–L10 use them, and so do the jitLLM scripts in L04, L05 and L09 (`run-jitllm.sh`, `run-nsys.sh`), which read them from `JITLLM_ROOT` and `JITLLM_MODEL_DIR`:
+jitLLM needs two folders: one for the jitLLM clone, one for the model. Choose them once; L06–L10 use them. The jitLLM scripts in L07, L08 and L09 (`run-jitllm.sh`, `run-nsys.sh`) read them from `JITLLM_ROOT` and `JITLLM_MODEL_DIR`:
 
 ```bash
 export JITLLM_ROOT=$HOME/jitllm                       # the jitLLM clone; it is built and run from here

@@ -1,4 +1,4 @@
-# L07 · Hybrid API with cuBLAS
+# L05 · Hybrid API with cuBLAS
 
 JIT → cuBLAS `sgemv` → JIT in one task graph, on shared device buffers.
 
