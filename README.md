@@ -28,7 +28,7 @@ All versions, repositories, branches and memory budgets are pinned in [`env/vers
 | [L02](demos/L02-metal-look-inside) | Run on Metal, then look inside | 46 (hidden) | ✓ | ✓ | ✓ | < 100 MB | this repo |
 | [L03](demos/L03-tornadoinsight) | Debug with TornadoInsight | 47 | ✓ | ✓ | ✓ | small | [tornado-insight](https://github.com/beehive-lab/tornado-insight) |
 | [L04](demos/L04-cuda-tilecontext) | GEMM: CUDA TileContext, Metal simdgroup | 88 | ◐ simdgroup GEMM | ✓ | ◐ portable GEMM | < 100 MB | this repo + [cuda-demos](https://github.com/beehive-lab/tornadovm-devoxx2026-cuda-demos) `devoxx/fancyTile.sh` (Linux · NVIDIA) |
-| [L05](demos/L05-hybrid-cublas) | Hybrid API with cuBLAS | 93 | ✗ | ✓ | ✗ | a few MB | [cuda-demos](https://github.com/beehive-lab/tornadovm-devoxx2026-cuda-demos) demo 04 |
+| [L05](demos/L05-hybrid-cublas) | Hybrid API with cuBLAS | 93 | ✗ | ✓ | ✗ | a few MB | [cuda-demos](https://github.com/beehive-lab/tornadovm-devoxx2026-cuda-demos) demo 04, `devoxx/fancyHybrid.sh` |
 | [L06](demos/L06-jitllm) | jitLLM on your own GPU | 103 | ✓ | ✓ | ✓ | **14GB** default | [jitllm](https://github.com/beehive-lab/jitllm) |
 | [L07](demos/L07-tornadovmpulse) | TornadoVMPulse | 49 | ◐ no power panel | ✓ | ◐ no power panel | < 100 MB | [TornadoVMPulse](https://github.com/beehive-lab/TornadoVMPulse) |
 | [L08](demos/L08-tornadoviz) | TornadoViz | 50 | ✓ | ✓ | ✓ | < 100 MB | [TornadoViz](https://github.com/beehive-lab/TornadoViz) |
