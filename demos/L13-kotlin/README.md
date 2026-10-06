@@ -2,14 +2,14 @@
 
 Kotlin compiles to JVM bytecode, so Kotlin kernels run on the same Metal, CUDA and OpenCL backends.
 
-**Runs on:** every backend; the tile example needs CUDA · **Code:** [TornadoVM PR #1123](https://github.com/beehive-lab/TornadoVM/pull/1123), still open against `develop` and **not in the 7.1.0 SDK**, so this demo builds TornadoVM from source
+**Runs on:** every backend; the tile example needs CUDA · **Code:** [TornadoVM PR #1123](https://github.com/beehive-lab/TornadoVM/pull/1123), branch `feature/kotlin-execution` in the PR author's fork, still open against `develop` and **not in the 7.1.0 SDK**, so this demo builds TornadoVM from source
 
 ## Setup, once
 
 ```bash
 git clone https://github.com/beehive-lab/TornadoVM.git demos/L13-kotlin/TornadoVM
 cd demos/L13-kotlin/TornadoVM
-git fetch origin pull/1123/head:kotlin && git checkout kotlin
+git fetch https://github.com/kotselidis/TornadoVM.git feature/kotlin-execution:kotlin && git checkout kotlin
 make jdk22plus BACKEND=metal KOTLIN=1      # macOS;   or BACKEND=cuda (NVIDIA), BACKEND=opencl (Intel, AMD)
 ```
 
