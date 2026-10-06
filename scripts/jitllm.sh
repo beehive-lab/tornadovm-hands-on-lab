@@ -1,7 +1,7 @@
-# Shared by the run-jitllm.sh scripts: jitLLM from a source build as the demo workload.
-# Source it; do not run it. Needs:
-#   JITLLM_ROOT       a built jitLLM clone (demos/L06-jitllm)
-#   JITLLM_MODEL_DIR  the directory holding $JITLLM_MODEL (default: the current directory)
+# Shared by the jitLLM scripts (L06 jitllm.sh, run-jitllm.sh, run-nsys.sh). Source it; do not run it.
+# Defaults to the layout demos/L06-jitllm/setup.sh creates; override for another clone or model folder:
+#   JITLLM_ROOT       a built jitLLM clone            (default: demos/L06-jitllm/jitllm)
+#   JITLLM_MODEL_DIR  the folder holding $JITLLM_MODEL (default: JITLLM_ROOT)
 # The jar decides the rest:
 #   jitllm-*-jdk21.jar      built with scripts/tornadovm-dev.sh: JDK 21 and that TornadoVM develop build
 #   jitllm-*-jdk22plus.jar  JDK 22 or newer, and the TornadoVM SDK already in TORNADOVM_HOME
@@ -11,11 +11,13 @@ source "$ROOT/env/versions.env"
 note() { echo "-- $*"; }
 die() { echo "ERROR: $*" >&2; exit 1; }
 
-[ -n "${JITLLM_ROOT:-}" ] || die "set JITLLM_ROOT to a built jitLLM clone (demos/L06-jitllm)"
-[ -x "$JITLLM_ROOT/jitllm" ] || die "JITLLM_ROOT=$JITLLM_ROOT has no jitllm launcher; is it a jitLLM clone?"
-MODEL="${JITLLM_MODEL_DIR:-$PWD}/$JITLLM_MODEL"
+# The launcher reads JITLLM_ROOT and JAVA_HOME from the environment.
+export JITLLM_ROOT="${JITLLM_ROOT:-$ROOT/demos/L06-jitllm/jitllm}"
+[ -x "$JITLLM_ROOT/jitllm" ] \
+  || die "no jitLLM clone at $JITLLM_ROOT: run demos/L06-jitllm/setup.sh, or set JITLLM_ROOT to your clone"
+MODEL="${JITLLM_MODEL_DIR:-$JITLLM_ROOT}/$JITLLM_MODEL"
 [ -f "$MODEL" ] || die "model not found: $MODEL
-  set JITLLM_MODEL_DIR, or download it: curl -L -O $JITLLM_MODEL_URL"
+  run demos/L06-jitllm/setup.sh, or set JITLLM_MODEL_DIR to the folder that holds it"
 
 # The jar the launcher will pick: a SNAPSHOT jar first, else any jitllm jar; the last in sort order.
 # Globs expand in sorted order; an unmatched glob stays literal, which the -e test skips.
@@ -24,23 +26,30 @@ for f in "$JITLLM_ROOT"/target/jitllm-*-SNAPSHOT.jar; do [ -e "$f" ] && JAR=$f; 
 if [ -z "$JAR" ]; then
   for f in "$JITLLM_ROOT"/target/jitllm-*.jar; do [ -e "$f" ] && JAR=$f; done
 fi
-[ -n "$JAR" ] || die "no jar in $JITLLM_ROOT/target; build jitLLM as in demos/L06-jitllm"
+[ -n "$JAR" ] || die "no jar in $JITLLM_ROOT/target: run demos/L06-jitllm/setup.sh"
 
-JAVA_VERSION="$(java -XshowSettings:properties -version 2>&1 | sed -n 's/^ *java\.specification\.version = //p')"
+java_version() { "$1/bin/java" -XshowSettings:properties -version 2>&1 | sed -n 's/^ *java\.specification\.version = //p'; }
+JAVA_VERSION=
+[ -z "${JAVA_HOME:-}" ] || JAVA_VERSION="$(java_version "$JAVA_HOME")"
 case "$JAR" in
   *-jdk21*.jar)
-    [ "$JAVA_VERSION" = 21 ] \
-      || die "${JAR##*/} needs JDK 21, found ${JAVA_VERSION:-no java}: sdk use java 21.0.2-open"
+    # Switch to SDKMAN!'s JDK 21 for this run only, so the shell can stay on the lab's JDK.
+    if [ "$JAVA_VERSION" != 21 ]; then
+      JDK21="${SDKMAN_DIR:-$HOME/.sdkman}/candidates/java/$JITLLM_JAVA_SDK"
+      [ -x "$JDK21/bin/java" ] \
+        || die "${JAR##*/} needs JDK 21, found ${JAVA_VERSION:-no JAVA_HOME}: sdk install java $JITLLM_JAVA_SDK"
+      export JAVA_HOME="$JDK21" PATH="$JDK21/bin:$PATH"
+    fi
     # TORNADOVM_HOME and PATH of the TornadoVM develop build that jitLLM was built against.
     DEV_ENV="$("$JITLLM_ROOT/scripts/tornadovm-dev.sh" env 2>/dev/null)" \
-      || die "${JAR##*/} needs the TornadoVM develop build; prepare it as in demos/L06-jitllm"
+      || die "${JAR##*/} needs the TornadoVM develop build: run demos/L06-jitllm/setup.sh"
     eval "$DEV_ENV"
     ;;
   *)
     [ "${JAVA_VERSION:-0}" -ge 22 ] 2>/dev/null \
       || die "${JAR##*/} needs JDK 22 or newer, found ${JAVA_VERSION:-no java}: sdk use java $JAVA_SDK"
     [ -n "${TORNADOVM_HOME:-}" ] && [ -d "$TORNADOVM_HOME" ] \
-      || die "${JAR##*/} runs on the TornadoVM SDK in TORNADOVM_HOME, which is not set; see the README quick start"
+      || die "${JAR##*/} runs on the TornadoVM SDK in TORNADOVM_HOME, which is not set; see Setup once in the README"
     ;;
 esac
 
