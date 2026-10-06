@@ -13,8 +13,6 @@ git clone -b feature/jitllm-openai-server https://github.com/stratika/DevoxxGeni
 (cd demos/L10-devoxxgenie/DevoxxGenieIDEAPlugin && ./gradlew buildPlugin)
 ```
 
-In IntelliJ: `Settings → Plugins → ⚙ → Install Plugin from Disk`. Pick the zip in `demos/L10-devoxxgenie/DevoxxGenieIDEAPlugin/build/distributions/`, then restart.
-
 ## Run
 
 ```bash
@@ -22,21 +20,17 @@ demos/L06-jitllm/jitllm.sh serve                  # terminal 1: leave it running
 curl -s localhost:8090/v1/models                  # terminal 2: shows "id":"gemma-4-E2B-it-Q4_0"
 ```
 
-In the DevoxxGenie settings, set:
+Then, in IntelliJ:
 
-| Field | Value |
-|---|---|
-| Provider | Custom OpenAI |
-| Base URL | `http://localhost:8090/v1` |
-| API key | anything that is not empty |
-| Model | `gemma-4-E2B-it-Q4_0`, the `id` from `/v1/models` |
-
-Then select a method, ask DevoxxGenie for a test, and watch jitLLM stream the answer.
+1. Open `Settings → Tools → DevoxxGenie`. Tick **jitLLM URL** and keep its URL, `http://localhost:8090/v1/`, the port `jitllm.sh serve` listens on.
+2. On the same page, under "Large Language Model Response", tick **Enable Stream Mode**. Apply.
+3. In the DevoxxGenie window, select the **jitLLM** provider and the model `gemma-4-E2B-it-Q4_0`.
+4. Open a Java class in the editor and select it. Type `/explain` as the prompt and run it.
 
 ## You should see
 
-- The answer streams into the DevoxxGenie panel while terminal 1 logs the request.
-- A wrong model name fails with `This server serves '…', not '…'`. The server loads one model and accepts only its `id`.
+- The explanation streams into the DevoxxGenie panel token by token, while terminal 1 logs the request.
+- The model list offers `gemma-4-E2B-it-Q4_0`, the one model the server loaded.
 
 ## Notes
 
