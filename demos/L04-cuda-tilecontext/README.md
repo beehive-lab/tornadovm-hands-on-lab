@@ -1,51 +1,30 @@
-# L04 · GEMM on each backend's matrix hardware
+# L04 · CUDA TileContext
 
-The deck shows this on CUDA with `TileContext`. To keep it reproducible everywhere, `run.sh` runs a portable GEMM on every backend, then the variant that uses that backend's own matrix hardware.
+Threads, tiles and cuBLAS in one CUDA graph, then a ladder of tile shapes against a hand-tuned kernel and cuBLAS, drawn for the big screen.
 
-| | |
-|---|---|
-| Platforms | macOS · Metal, Linux · CUDA, Linux · OpenCL |
-| GPU memory | under 100 MB at `n = 1024`; the TornadoVM default (4GB) is plenty |
-| Code | in this repo: [`run.sh`](run.sh), using the SDK's built-in `tornado.examples`; on Linux with an NVIDIA GPU, also [beehive-lab/tornadovm-devoxx2026-cuda-demos](https://github.com/beehive-lab/tornadovm-devoxx2026-cuda-demos), [`devoxx/fancyTile.sh`](https://github.com/beehive-lab/tornadovm-devoxx2026-cuda-demos/blob/main/devoxx/fancyTile.sh) |
+**Runs on:** Linux · CUDA only · **Needs:** [Setup once](../../README.md#setup-once) · **Code:** [`devoxx/fancyTile.sh`](https://github.com/beehive-lab/tornadovm-devoxx2026-cuda-demos/blob/main/devoxx/fancyTile.sh) in the CUDA demos repository
 
-| Backend | What runs | Extra requirements |
-|---|---|---|
-| every backend | `compute.MatrixMultiplication2D`: nested `@Parallel` loops | none |
-| Metal | `compute.MatrixMultiplySimdgroup`: Apple `simdgroup_float8x8` matrix units through `KernelContext.matrixMultiply8x8` | Apple Silicon |
-| CUDA | `tile.TileMatrixMultiply`: the same GEMM with `@Parallel`, `KernelContext` and `TileContext`, then `--printKernel` on `tile.TileSoftmax` | CUDA 13.3+ with `tileiras`, driver R580+, compute capability 8.0+ |
-| OpenCL | the portable GEMM only | none |
+## Setup, once
 
-## Setup for the CUDA variant
+The CUDA demos repository runs on its own pinned SDK, 7.0.0. It also needs CUDA 13.3+ with `tileiras`, driver R580+ and compute capability 8.0+:
 
 ```bash
-sdk install tornadovm 7.1.0-jdk22plus-cuda
+sdk install tornadovm 7.0.0-jdk22plus-cuda       # answer n to making it the default
 pip install --user nvidia-cuda-nvcc 'cuda-tile[tileiras]' nvidia-cuda-cccl
 ```
 
 ## Run
 
 ```bash
-./run.sh            # n = 1024
-./run.sh 2048       # larger matrices
+demos/L04-cuda-tilecontext/run.sh
 ```
 
-## What to look for
+On the first run, the script clones the CUDA demos repository into `demos/L04-cuda-tilecontext/tornadovm-devoxx2026-cuda-demos`. It then runs `devoxx/fancyTile.sh`, which takes about 20 seconds plus [enter] between the two acts. `NO_PAUSE=1 demos/L04-cuda-tilecontext/run.sh` skips the pauses.
 
-- On CUDA, every version reports a correctness check, and `--printKernel` showing `__tile_global__`, `ct::partition_view`, `ct::reduce_max`, with no inline PTX.
-- On Metal, `--printKernel` shows the `simdgroup` matrix operations in the generated MSL.
+It needs Python 3 and a dark terminal at least 100 columns wide.
 
-The tile examples check the backend themselves and exit with a message when it is not CUDA. All runs keep `tornado.recover.bailout` off, so a kernel that fails to compile cannot pass by running on the host. On an SDK built with several backends, the variants follow the backends it lists; make sure the default device (`0:0` in `tornado --devices`) is the one you mean.
+## You should see
 
-## On Linux with an NVIDIA GPU: `fancyTile.sh`
-
-Linux with an NVIDIA GPU only. The CUDA demos repo has a `devoxx` folder of scripts for the big screen. `fancyTile.sh` runs two acts, each checked: a `KernelContext` kernel, a `TileContext` GEMM, cuBLAS and a `@Parallel` loop captured into one CUDA graph, then an FP16 GEMM ladder of tile shapes against a hand-tuned kernel and cuBLAS, drawn as a bar chart. It takes about 20 seconds.
-
-```bash
-git clone https://github.com/beehive-lab/tornadovm-devoxx2026-cuda-demos.git
-cd tornadovm-devoxx2026-cuda-demos/devoxx
-bash fancyTile.sh            # NO_PAUSE=1 bash fancyTile.sh to skip the [enter] between acts
-```
-
-The script sources the repo's `scripts/setup-env.sh`, compiles the demos it needs and keeps `tornado.recover.bailout` off. It renders with Python 3 (standard library only) and wants a dark terminal at least 100 columns wide with Unicode block characters. It ends with a scoreboard that says `PASSED` only if every check held. If a step fails, its spinner turns into a red `✘` with the path of its log.
-
-The CUDA demos repo selects its SDK in `env/versions.env` (`TORNADO_SDK_PROFILE`), which defaults to **7.0.0**, while this lab uses 7.1.0. Check which one `setup-env.sh` picked before running the demo.
+- Act 1: a `KernelContext` kernel, a `TileContext` GEMM, `cublasSgemv` and a `@Parallel` loop, captured into one CUDA graph.
+- Act 2: FP16 GEMM bars for each tile shape, against a hand-tuned kernel and cuBLAS, each checked.
+- A scoreboard ending in `PASSED -- every check holds`. A failed step shows a red `✘` and the path of its log.
