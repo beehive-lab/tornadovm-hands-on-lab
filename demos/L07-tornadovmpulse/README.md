@@ -2,52 +2,35 @@
 
 A dashboard for the TornadoVM profiler's output.
 
-| | |
-|---|---|
-| Platforms | macOS · Metal, Linux · CUDA, Linux · OpenCL (the power panel needs NVIDIA) |
-| GPU memory | under 100 MB; the TornadoVM default (4GB) is plenty |
-| Code | the dashboard lives in [beehive-lab/TornadoVMPulse](https://github.com/beehive-lab/TornadoVMPulse); [`run.sh`](run.sh) in this repo produces the profile |
+**Runs on:** every backend; the power panel needs NVIDIA · **Needs:** [Setup once](../../README.md#setup-once) · **Code:** [beehive-lab/TornadoVMPulse](https://github.com/beehive-lab/TornadoVMPulse)
 
-## 1. Produce a profile
+## Run
+
+**1. Profile a workload** with one of the two scripts:
 
 ```bash
-./run.sh          # writes profile.json next to this README
+demos/L07-tornadovmpulse/run.sh           # VectorAddInt → profile.json
+demos/L07-tornadovmpulse/run-jitllm.sh    # jitLLM       → profile-jitllm.json   (needs L06's setup.sh)
 ```
 
-With jitLLM as the workload instead of `VectorAddInt`, run `run-jitllm.sh`. The script needs the two folders from L06's [Where things go](../L06-jitllm/README.md#where-things-go):
-
-- `JITLLM_ROOT`: the jitLLM clone you built in L06. It holds the `jitllm` launcher and `target/jitllm-*.jar`.
-- `JITLLM_MODEL_DIR`: the folder you downloaded `gemma-4-E2B-it-Q4_0.gguf` into.
+**2. Start TornadoVMPulse**, then upload that file in the browser. Both files are in `demos/L07-tornadovmpulse/`.
 
 ```bash
-ls "$JITLLM_ROOT/jitllm" "$JITLLM_ROOT"/target/jitllm-*.jar "$JITLLM_MODEL_DIR/gemma-4-E2B-it-Q4_0.gguf"   # all three must exist
-
-./run-jitllm.sh    # if you exported both in this terminal (L06); writes profile-jitllm.json
-JITLLM_ROOT=~/repositories/jitllm JITLLM_MODEL_DIR=/opt/models ./run-jitllm.sh    # or name them for this run only, e.g. a clone in ~/repositories/jitllm and models in /opt/models
+demos/L07-tornadovmpulse/tornadovm-pulse.sh
 ```
 
-An optional argument sets the number of tokens to generate (default 30). The jar in the clone decides the JDK: a `jdk21` jar from `tornadovm-dev.sh` needs JDK 21 and runs on that develop build; any other needs JDK 22+ and runs on the SDK in `TORNADOVM_HOME`. If something is missing, the script says which path or version it found.
+The first start clones TornadoVMPulse and installs its requirements; later starts skip that.
 
-The output grows with every generated token, so keep the run short. jitLLM's console output goes to `jitllm.log`.
+## You should see
 
-## 2. Build and run the dashboard
-
-```bash
-./tornadovm-pulse.sh          # extra arguments go to streamlit, e.g. --server.port 8502
-```
-
-It prints each command before running it, and skips the steps already done: it clones TornadoVMPulse next to this README, installs its requirements in `TornadoVMPulse/.venv` (a system-wide `pip install` is refused on Pythons marked externally managed), and starts the dashboard. By hand, the steps are:
-
-```bash
-git clone https://github.com/beehive-lab/TornadoVMPulse.git && cd TornadoVMPulse
-python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
-.venv/bin/streamlit run src/app.py
-```
-
-Upload `profile.json` in the browser. Raw JSON or log files are converted to CSV automatically; the time unit (ns, ms, s) is in the sidebar.
-
-## What to look for
-
+- Step 1 ends with `Wrote …/profile.json` (or `…/profile-jitllm.json`).
+- Step 2 prints `Local URL: http://localhost:8501`; open it if the browser does not open by itself.
 - The sunburst chart: on a first run, kernel time is a sliver of the total.
-- Copy-in and copy-out: time and count per task graph.
-- Power comes from NVML on NVIDIA; on the Mac that panel stays empty.
+- Copy-in and copy-out time and count per task graph.
+- Power, from NVML, on NVIDIA only. On other GPUs that panel stays empty.
+
+## Notes
+
+- **`run-jitllm.sh` file size:** the profile grows with every token. By default it generates 30 tokens, about 16 MB; `run-jitllm.sh 5` gives about 7 MB. These figures are from an RTX 5080 Laptop GPU. The file isn't in the repository because of its size, and because it depends on your GPU.
+- **Logs:** jitLLM's console output goes to `demos/L07-tornadovmpulse/jitllm.log`.
+- **Dashboard environment:** it runs in its own Python environment, `TornadoVMPulse/.venv`. Extra arguments go to streamlit, for example `--server.port 8502`.
