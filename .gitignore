@@ -1,19 +1,36 @@
-# outputs written by the demo scripts
-demos/L07-tornadovmpulse/profile.json
-demos/L08-tornadoviz/bytecodes/
-demos/L07-tornadovmpulse/profile-jitllm.json
-demos/L07-tornadovmpulse/TornadoVMPulse/
-demos/L08-tornadoviz/bytecodes-jitllm/
-demos/L08-tornadoviz/TornadoViz/
-demos/*/jitllm.log
-demos/L09-jitllm-profiling/jitllm*
-demos/L03-tornadoinsight/target/
+# Outputs written by the demo scripts; every script recreates them on its next run.
+# logs: scripts/run-all.sh (logs/), jitLLM console output (jitllm.log), anything else a run writes
 logs/
-# models are downloaded, never committed
-*.gguf
-results/
-.DS_Store
+*.log
+# profiles: L07 run.sh (profile.json), L07 run-jitllm.sh (profile-jitllm.json)
+demos/*/*.json
+# bytecode dumps: L08 run.sh (bytecodes/), L08 run-jitllm.sh (bytecodes-jitllm/)
+demos/L08-tornadoviz/bytecodes/
+demos/L08-tornadoviz/bytecodes-jitllm/
+# Nsight Systems: L09 run-nsys.sh (*.nsys-rep), nsys stats (*.sqlite), interrupted captures (*.qdstrm)
+*.nsys-rep
+*.sqlite
+*.qdstrm
+# builds: L03 ./mvnw compile
+demos/L03-tornadoinsight/target/
+# benchmark tables from earlier GEMM runs
 stats-mxm-*.txt
-# IntelliJ project files
+results/
+
+# External repositories, cloned next to the demo that uses them, with their own build and .venv
+demos/L04-cuda-tilecontext/tornadovm-devoxx2026-cuda-demos/
+demos/L05-hybrid-cublas/tornadovm-devoxx2026-cuda-demos/
+demos/L06-jitllm/jitllm/
+demos/L07-tornadovmpulse/TornadoVMPulse/
+demos/L08-tornadoviz/TornadoViz/
+demos/L10-devoxxgenie/DevoxxGenieIDEAPlugin/
+demos/L13-kotlin/TornadoVM/
+
+# Models are downloaded, never committed: L06 setup.sh (*.gguf, *.gguf.part while downloading)
+*.gguf
+*.gguf.part
+
+# Editors and OS
 .idea/
 *.iml
+.DS_Store
