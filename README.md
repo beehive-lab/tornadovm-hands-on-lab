@@ -33,8 +33,8 @@ For L06–L10 (jitLLM), also run `demos/L06-jitllm/setup.sh` once.
 | [L08](demos/L08-tornadoviz) | TornadoViz | 50 | ✓ | ✓ | ✓ |
 | [L09](demos/L09-jitllm-profiling) | jitLLM, then profile it | 104 (hidden) | ◐ | ✓ | ◐ |
 | [L10](demos/L10-devoxxgenie) | DevoxxGenie: a local LLM inside your IDE | 108 | ✓ | ✓ | ✓ |
-| [L11](demos/L11-flink-sql-gpu) | An SQL operator on the GPU (not public yet) | 111 | ✗ | ✓ | ✗ |
-| [L12](demos/L12-flink-fleet-triage) | Fleet telemetry triage (not public yet) | 114 | ✗ | ✓ | ✗ |
+| [L11](demos/L11-flink-sql-gpu) | An SQL operator on the GPU | 111 | ✗ | ✓ | ✗ |
+| [L12](demos/L12-flink-fleet-triage) | Fleet telemetry triage | 114 | ✗ | ✓ | ✗ |
 | [L13](demos/L13-kotlin) | TornadoVM for Kotlin (work in progress) | 117 | ✓ | ✓ | ✓ |
 
 Each demo's README explains its ◐ or ✗.
@@ -59,8 +59,7 @@ If your GPU has less than a budget, lower the budget. On macOS the GPU can use o
 ## Open items
 
 - [ ] Rehearse every demo on macOS · Metal, Linux · CUDA and Linux · OpenCL.
-- [ ] Publish `flink-accelerator-tornadovm` (L11, L12), and record the GPU memory they need.
-- [ ] Add the download URL for Qwen3-0.6B FP16 (L12).
+- [ ] Rehearse L11 and L12 from a fresh `1-fetch.sh`, and record the GPU memory they need.
 - [ ] Pin commits for every external repository in `env/versions.env`.
 - [ ] Merge jitLLM `feature/stream-usage` into `main`, so DevoxxGenie shows token counts with the L06 build (L10).
 - [ ] Add a 7.1.0 SDK profile to the CUDA demos repository; it pins 7.0.0 (L04, L05).

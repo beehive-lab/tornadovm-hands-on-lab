@@ -24,6 +24,7 @@ demos/L06-jitllm/jitllm/
 demos/L07-tornadovmpulse/TornadoVMPulse/
 demos/L08-tornadoviz/TornadoViz/
 demos/L10-devoxxgenie/DevoxxGenieIDEAPlugin/
+demos/L11-flink-sql-gpu/flink-accelerator-tornadovm/
 demos/L13-kotlin/TornadoVM/
 
 # Models are downloaded, never committed: L06 setup.sh (*.gguf, *.gguf.part while downloading)
