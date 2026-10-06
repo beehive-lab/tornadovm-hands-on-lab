@@ -1,32 +1,28 @@
 # L01 · SDKMAN!
 
-Install the TornadoVM SDK in one line, run a built-in example, and generate the argfile that lets IDEs and build tools run TornadoVM.
+Install the TornadoVM SDK in one line, run a built-in example, and generate the argfile that IDEs and build tools use to run TornadoVM.
 
-| | |
-|---|---|
-| Platforms | macOS · Metal, Linux · CUDA, Linux · OpenCL |
-| GPU memory | under 100 MB; the TornadoVM default (4GB) is plenty |
-| Code | in this repo: [`run.sh`](run.sh), using the SDK's built-in `tornado.examples` |
-
-## Setup
-
-```bash
-sdk list tornadovm
-sdk install tornadovm 7.1.0-jdk22plus-metal     # macOS
-sdk install tornadovm 7.1.0-jdk22plus-cuda      # Linux, NVIDIA
-sdk install tornadovm 7.1.0-jdk22plus-opencl    # Linux, Intel or AMD
-```
+**Runs on:** every backend · **Needs:** [Setup once](../../README.md#setup-once)
 
 ## Run
 
 ```bash
-./run.sh
+sdk list tornadovm              # the version grid: 7.1.0 × jdk21 / jdk22plus × opencl, cuda, metal
+demos/L01-sdkman/run.sh         # devices, version, MatrixVectorRowMajor, then the argfile
 ```
 
-## What to look for
+## You should see
 
-- `sdk list tornadovm` shows the version grid: 7.1.0 × `jdk21` / `jdk22plus` × `opencl`, `cuda`, `metal`.
-- `tornado --devices` lists devices as `backend:device` (for example `0:0`); that index is what `-Dtornado.device` takes later.
-- `VectorAddInt` runs clean. That is the checkpoint before moving on.
+- `tornado --devices` lists your GPU as `Tornado device=0:0`. Pass that index to `-Dtornado.device` later.
+- `MatrixVectorRowMajor` prints `Validation PASSED ✓`, then the speedup of each GPU version against plain Java. Get this far before moving on.
+- The argfile ends with `--add-modules …,tornado.drivers.<backend>,…`.
 
-Use the `jdk22plus` SDK unless you are pinned to JDK 21. After switching JDK, run `tornado --generate-argfile` again: the flags differ per JDK, and a stale argfile fails with `Unrecognized VM option EnableJVMCI`.
+## Notes
+
+The example runs from the SDK's examples jar, the way you would run your own classes:
+
+```bash
+tornado -cp $TORNADOVM_HOME/share/java/tornado/tornado-examples-7.1.0.jar uk.ac.manchester.tornado.examples.compute.MatrixVectorRowMajor
+```
+
+Use the `jdk22plus` SDK unless you are pinned to JDK 21. After switching JDK, run `tornado --generate-argfile` again. A stale argfile fails with `Unrecognized VM option EnableJVMCI`.
