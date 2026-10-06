@@ -6,11 +6,10 @@ IntelliJ talks to jitLLM through its OpenAI-compatible endpoint, on your own GPU
 
 ## Setup, once
 
-The Marketplace build of DevoxxGenie does not have this branch, so build the fork (needs JDK 17+):
+The Marketplace build of DevoxxGenie does not have this branch, so clone the fork:
 
 ```bash
 git clone -b feature/jitllm-openai-server https://github.com/stratika/DevoxxGenieIDEAPlugin.git demos/L10-devoxxgenie/DevoxxGenieIDEAPlugin
-(cd demos/L10-devoxxgenie/DevoxxGenieIDEAPlugin && ./gradlew buildPlugin)
 ```
 
 ## Run
@@ -18,9 +17,10 @@ git clone -b feature/jitllm-openai-server https://github.com/stratika/DevoxxGeni
 ```bash
 demos/L06-jitllm/jitllm.sh serve                  # terminal 1: leave it running, port 8090
 curl -s localhost:8090/v1/models                  # terminal 2: shows "id":"gemma-4-E2B-it-Q4_0"
+(cd demos/L10-devoxxgenie/DevoxxGenieIDEAPlugin && ./gradlew runIde)   # terminal 2: IntelliJ with the plugin in place
 ```
 
-Then, in IntelliJ:
+`runIde` builds the fork (it needs JDK 17+) and opens a separate IntelliJ window with DevoxxGenie already installed; the first start downloads that IntelliJ. Then, in that window:
 
 1. Open `Settings → Tools → DevoxxGenie`. Tick **jitLLM URL** and keep its URL, `http://localhost:8090/v1/`, the port `jitllm.sh serve` listens on.
 2. On the same page, under "Large Language Model Response", tick **Enable Stream Mode**. Apply.
