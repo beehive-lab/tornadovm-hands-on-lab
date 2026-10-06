@@ -6,9 +6,14 @@ The flags L02 and L07 ran on `VectorAddInt`, now on a real workload, then the wh
 
 ## 1. The kernels and the bytecodes
 
+These call the jitLLM launcher directly, in the clone L06's `setup.sh` made, where the model also is:
+
 ```bash
-demos/L06-jitllm/jitllm.sh --max-new-tokens 5 --prompt "Explain GPU acceleration in one sentence." --print-kernel
-demos/L06-jitllm/jitllm.sh --max-new-tokens 2 --prompt "Explain GPU acceleration in one sentence." --print-bytecodes
+cd demos/L06-jitllm/jitllm
+export JITLLM_ROOT=$PWD     # the launcher reads it
+./jitllm --gpu --model gemma-4-E2B-it-Q4_0.gguf --max-new-tokens 5 --prompt "Explain GPU acceleration in one sentence." --print-kernel
+./jitllm --gpu --model gemma-4-E2B-it-Q4_0.gguf --max-new-tokens 2 --prompt "Explain GPU acceleration in one sentence." --print-bytecodes
+cd -                        # back to the root of this repository, for part 2
 ```
 
 You should see the generated kernels: RMS norm, RoPE, attention and the quantised projections. Then the bytecodes: the same compiled kernels, launched for every token.
@@ -27,6 +32,6 @@ You should see a long stretch of the timeline with no GPU work while the model l
 
 ## Notes
 
-- The jitLLM options for profiling are under "Debug and Profiling" in `demos/L06-jitllm/jitllm.sh --help`.
-- By hand, part 2 is `nsys profile -o jitllm demos/L06-jitllm/jitllm.sh --prompt "…"`, then `nsys stats --report cuda_gpu_kern_sum jitllm.nsys-rep`. `run-nsys.sh --cuda-graphs` adds jitLLM's `--cuda-graphs` and nsys's `--cuda-graph-trace=node`, which keeps the kernels inside each graph visible.
+- The jitLLM options for profiling are under "Debug and Profiling" in `./jitllm --help`, in the jitLLM clone.
+- By hand, part 2 is `nsys profile -o jitllm ./jitllm --gpu --model gemma-4-E2B-it-Q4_0.gguf --prompt "…"` in the jitLLM clone, then `nsys stats --report cuda_gpu_kern_sum jitllm.nsys-rep`. `run-nsys.sh --cuda-graphs` adds jitLLM's `--cuda-graphs` and nsys's `--cuda-graph-trace=node`, which keeps the kernels inside each graph visible.
 - `run-nsys.sh 10` generates 10 tokens instead of 30.
