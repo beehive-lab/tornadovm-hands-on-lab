@@ -1,21 +1,16 @@
-# L02 · Run on Metal, then look inside
+# L02 · Run on the GPU, then look inside
 
-The same example on your SDK (Metal on the Mac in the session), plus the two flags that show what the JIT generated and what the runtime does.
+The L01 example again, plus two flags: one shows the code the JIT generated, the other the steps the runtime takes. The slide shows Metal, but every backend works. Backup demo: its slide is hidden in the current deck.
 
-| | |
-|---|---|
-| Platforms | macOS · Metal, Linux · CUDA, Linux · OpenCL (prints MSL, CUDA C or OpenCL C) |
-| GPU memory | under 100 MB; the TornadoVM default (4GB) is plenty |
-| Code | in this repo: [`run.sh`](run.sh), using the SDK's built-in `tornado.examples` |
-| Note | backup demo: its slide is hidden in the current deck |
+**Runs on:** every backend · **Needs:** [Setup once](../../README.md#setup-once)
 
 ## Run
 
 ```bash
-./run.sh
+demos/L02-metal-look-inside/run.sh    # VectorAddInt, then --printKernel, then --printBytecodes
 ```
 
-## What to look for
+## You should see
 
-- `--printKernel` prints the generated source: Metal Shading Language on the Mac, CUDA C or OpenCL C on other SDKs.
-- `--printBytecodes` lists the runtime steps: `ALLOC`, the transfers, `LAUNCH`, `DEALLOC`. These are the steps the TaskGraph animation showed, and the level at which `withCUDAGraph()` captures and replays.
+- `--printKernel`: the generated source, which is Metal Shading Language on a Mac, `extern "C" __global__ void vectorAdd(…)` on CUDA, and OpenCL C on OpenCL.
+- `--printBytecodes`: one `bc:` line per runtime step, in the order `ALLOC`, `TRANSFER_HOST_TO_DEVICE_…`, `LAUNCH task s0.t0 - vectorAdd`, `TRANSFER_DEVICE_TO_HOST_…`, `DEALLOC`. These are the steps from the TaskGraph animation, and `withCUDAGraph()` captures and replays at this level.
