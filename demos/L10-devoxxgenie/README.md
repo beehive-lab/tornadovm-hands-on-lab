@@ -1,42 +1,44 @@
 # L10 · DevoxxGenie: a local LLM inside your IDE
 
-IntelliJ talks to jitLLM over its OpenAI-compatible endpoint, on your own GPU.
+IntelliJ talks to jitLLM through its OpenAI-compatible endpoint, on your own GPU.
 
-| | |
+**Runs on:** every backend, with IntelliJ IDEA · **Needs:** L06's setup · **Plugin:** [stratika/DevoxxGenieIDEAPlugin](https://github.com/stratika/DevoxxGenieIDEAPlugin/tree/feature/jitllm-openai-server), branch `feature/jitllm-openai-server`
+
+## Setup, once
+
+The Marketplace build of DevoxxGenie does not have this branch, so build the fork (needs JDK 17+):
+
+```bash
+git clone -b feature/jitllm-openai-server https://github.com/stratika/DevoxxGenieIDEAPlugin.git demos/L10-devoxxgenie/DevoxxGenieIDEAPlugin
+(cd demos/L10-devoxxgenie/DevoxxGenieIDEAPlugin && ./gradlew buildPlugin)
+```
+
+In IntelliJ: `Settings → Plugins → ⚙ → Install Plugin from Disk`. Pick the zip in `demos/L10-devoxxgenie/DevoxxGenieIDEAPlugin/build/distributions/`, then restart.
+
+## Run
+
+```bash
+demos/L06-jitllm/jitllm.sh serve                  # terminal 1: leave it running, port 8090
+curl -s localhost:8090/v1/models                  # terminal 2: shows "id":"gemma-4-E2B-it-Q4_0"
+```
+
+In the DevoxxGenie settings, set:
+
+| Field | Value |
 |---|---|
-| Platforms | macOS · Metal, Linux · CUDA, Linux · OpenCL, with IntelliJ IDEA |
-| GPU memory | as L06: 14GB budget by default, see [GPU memory](../L06-jitllm/README.md#gpu-memory) |
-| Engine | [beehive-lab/jitllm](https://github.com/beehive-lab/jitllm/tree/feature/stream-usage), branch `feature/stream-usage` |
-| Plugin | [stratika/DevoxxGenieIDEAPlugin](https://github.com/stratika/DevoxxGenieIDEAPlugin/tree/feature/jitllm-openai-server), branch `feature/jitllm-openai-server` |
-| Runtime | the TornadoVM build from L06 (the deck shows `7.0.1-jdk22plus-cuda`) |
+| Provider | Custom OpenAI |
+| Base URL | `http://localhost:8090/v1` |
+| API key | anything that is not empty |
+| Model | `gemma-4-E2B-it-Q4_0`, the `id` from `/v1/models` |
 
-## 1. Build and start the engine
+Then select a method, ask DevoxxGenie for a test, and watch jitLLM stream the answer.
 
-```bash
-git clone -b feature/stream-usage https://github.com/beehive-lab/jitllm.git && cd jitllm
-# build as in L06 (JDK 21, scripts/tornadovm-dev.sh); M is the model path from L06's Where things go
-./jitllm serve -m "$M" --gpu --gpu-memory 14GB --port 8090
-curl -s localhost:8090/v1/models     # "id": "gemma-4-E2B-it-Q4_0"
-```
+## You should see
 
-Gemma 4 E2B (`gemma-4-E2B-it-Q4_0.gguf`, download in [L06](../L06-jitllm/README.md)) is the preferred model for this demo. If you serve an F16 Llama model on Metal instead, add `--fp32-kv-cache`: a source build refuses an FP16 key/value cache for it (`GPUL-CFG-002`).
+- The answer streams into the DevoxxGenie panel while terminal 1 logs the request.
+- A wrong model name fails with `This server serves '…', not '…'`. The server loads one model and accepts only its `id`.
 
-## 2. Build and install the plugin
+## Notes
 
-The Marketplace build of DevoxxGenie does not include this branch, so build the fork (JDK 17+, same steps on macOS and Linux):
-
-```bash
-git clone -b feature/jitllm-openai-server https://github.com/stratika/DevoxxGenieIDEAPlugin.git
-cd DevoxxGenieIDEAPlugin
-./gradlew buildPlugin          # produces build/distributions/DevoxxGenie-X.Y.Z.zip
-```
-
-In IntelliJ: `Settings → Plugins → ⚙ → Install Plugin from Disk`, pick the zip, and restart.
-
-## 3. Wire it up
-
-In the DevoxxGenie settings, choose provider **Custom OpenAI**, base URL `http://localhost:8090/v1`, any non-empty API key, and model `gemma-4-E2B-it-Q4_0`. The server loads one model and rejects requests for any other name (`This server serves '…', not '…'`), so the model must match the `id` from `/v1/models`. Then select a method, ask for a test, and watch jitLLM stream the answer.
-
-Field labels move between plugin versions; check them on the day.
-
-**Known issue:** building `feature/stream-usage` from source needs TornadoVM develop artifacts (see L06), while the slide pairs it with the 7.0.1 SDK. Confirm the pairing before the session.
+- DevoxxGenie shows token counts only with jitLLM's `feature/stream-usage` branch. That branch is not merged into `main` and builds against TornadoVM develop (`scripts/tornadovm-dev.sh` in the jitLLM repository), not the 7.1.0 SDK. Everything else works with the L06 build.
+- Field labels move between plugin versions; check them on the day.
