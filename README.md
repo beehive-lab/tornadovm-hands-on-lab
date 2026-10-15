@@ -1,6 +1,6 @@
 # TornadoVM Hands-On Lab
 
-Every demo from *From Install to Insight: A Hands-On GPU Lab for Java Developers*, reproducible on macOS and Linux. The demos are numbered `L01`–`L13` in the order the lab runs them.
+Every demo from *From Install to Insight: A Hands-On GPU Lab for Java Developers*, reproducible on macOS and Linux. The demos are numbered `L01`–`L14` in the order the lab runs them.
 
 ## Setup once
 
@@ -36,6 +36,7 @@ For L06–L10 (jitLLM), also run `demos/L06-jitllm/setup.sh` once.
 | [L11](demos/L11-flink-sql-gpu) | An SQL operator on the GPU | 111 | ✗ | ✓ | ✗ |
 | [L12](demos/L12-flink-fleet-triage) | Fleet telemetry triage | 114 | ✗ | ✓ | ✗ |
 | [L13](demos/L13-kotlin) | TornadoVM for Kotlin (work in progress) | 117 | ✓ | ✓ | ✓ |
+| [L14](demos/L14-hybrid-mlx) | Hybrid API with Apple MLX (the Metal twin of L05) | – | ✓ | ✗ | ✗ |
 
 Each demo's README explains its ◐ or ✗.
 

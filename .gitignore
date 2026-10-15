@@ -11,8 +11,9 @@ demos/L08-tornadoviz/bytecodes-jitllm/
 *.nsys-rep
 *.sqlite
 *.qdstrm
-# builds: L03 ./mvnw compile
+# builds: L03 ./mvnw compile, L14 run.sh (javac)
 demos/L03-tornadoinsight/target/
+demos/L14-hybrid-mlx/build/
 # benchmark tables from earlier GEMM runs
 stats-mxm-*.txt
 results/
@@ -35,3 +36,4 @@ demos/L13-kotlin/TornadoVM/
 .idea/
 *.iml
 .DS_Store
+__pycache__/
