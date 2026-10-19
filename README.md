@@ -1,6 +1,6 @@
 # TornadoVM Hands-On Lab
 
-Every demo from *From Install to Insight: A Hands-On GPU Lab for Java Developers*, reproducible on macOS and Linux. The demos are numbered `L01`–`L14` in the order the lab runs them.
+Every demo from *From Install to Insight: A Hands-On GPU Lab for Java Developers*, reproducible on macOS and Linux. The demos are numbered `L01`–`L15` in the order the lab runs them.
 
 ## Setup once
 
@@ -36,7 +36,8 @@ For L06–L10 (jitLLM), also run `demos/L06-jitllm/setup.sh` once.
 | [L11](demos/L11-flink-sql-gpu) | An SQL operator on the GPU | 111 | ✗ | ✓ | ✗ |
 | [L12](demos/L12-flink-fleet-triage) | Fleet telemetry triage | 114 | ✗ | ✓ | ✗ |
 | [L13](demos/L13-kotlin) | TornadoVM for Kotlin (work in progress) | 117 | ✓ | ✓ | ✓ |
-| [L14](demos/L14-hybrid-mlx) | Hybrid API with Apple MLX (the Metal twin of L05) | – | ✓ | ✗ | ✗ |
+| [L14](demos/L14-hybrid-mlx) | Hybrid API with Apple MLX: L15's FancyHybridMlx, then Java SGEMM against MLX (the Metal twin of L05) | – | ✓ | ✗ | ✗ |
+| [L15](demos/L15-maven-starter) | Your own Maven project, then the Hybrid API (`FancyHybrid`) | – | ✓ | ✓ | ◐ |
 
 Each demo's README explains its ◐ or ✗.
 
@@ -64,8 +65,11 @@ If your GPU has less than a budget, lower the budget. On macOS the GPU can use o
 - [ ] Pin commits for every external repository in `env/versions.env`.
 - [ ] Merge jitLLM `feature/stream-usage` into `main`, so DevoxxGenie shows token counts with the L06 build (L10).
 - [ ] Add a 7.1.0 SDK profile to the CUDA demos repository; it pins 7.0.0 (L04, L05).
+- [ ] Rehearse L15 on Linux · CUDA: `FancyHybrid` (cuBLAS, `withCUDAGraph()`) compiles but has not run on an NVIDIA GPU yet.
 
 ## Layout
+
+`pom.xml` at the root lists the Maven demos (L03, L15) as modules, so opening this folder in IntelliJ imports them all. Each demo still builds alone, with its own wrapper and TornadoVM version, and its `run.sh` builds only itself.
 
 ```
 env/versions.env        versions, repositories, branches, model, memory budgets
@@ -73,4 +77,5 @@ scripts/check-env.sh    SDK, backends, GPU memory, and which demos apply here
 scripts/run-all.sh      runs every demos/*/run.sh: PASS / SKIP / FAIL
 scripts/*.sh            helpers the demo scripts source
 demos/Lnn-<name>/       README.md, plus the scripts or sources that live here
+pom.xml                 lists the Maven demos, so an IDE imports them all
 ```

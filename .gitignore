@@ -11,9 +11,12 @@ demos/L08-tornadoviz/bytecodes-jitllm/
 *.nsys-rep
 *.sqlite
 *.qdstrm
-# builds: L03 ./mvnw compile, L14 run.sh (javac)
+# builds: L03 ./mvnw compile, L14 run.sh (javac), L15 run.sh (./mvnw package)
 demos/L03-tornadoinsight/target/
 demos/L14-hybrid-mlx/build/
+demos/L15-maven-starter/target/
+# L15 run.sh: the JVM flags of its SDK, for the IntelliJ run configurations in demos/L15-maven-starter/.run/
+demos/L15-maven-starter/tornado.args
 # benchmark tables from earlier GEMM runs
 stats-mxm-*.txt
 results/

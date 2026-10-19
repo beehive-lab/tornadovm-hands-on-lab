@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- L15 · a TornadoVM Maven project to start from.
+       ./mvnw package               HelloTornado (step 1), plus the hybrid classes (step 2) whose profiles are on:
+         profile mlx                  FancyHybridMlx, Java kernels and Apple MLX in one task graph; on by itself on macOS
+         profile cublas               FancyHybrid, Java kernels and NVIDIA cuBLAS in one task graph; on by itself everywhere
+     Maven compiles against the TornadoVM jars from Maven Central; the TornadoVM SDK runs the code.
+     Keep tornadovm.version in step with STARTER_TORNADOVM_MAVEN in env/versions.env; run.sh passes that value. -->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.example</groupId>
+    <artifactId>tornadovm-maven-starter</artifactId>
+    <version>1.0</version>
+
+    <properties>
+        <maven.compiler.release>22</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- 7.3.1 SDK for JDK 22 and newer; the hybrid libraries (tornado-mlx) ship from 7.3.0 -->
+        <tornadovm.version>7.3.1-jdk22plus</tornadovm.version>
+        <!-- mvn exec:exec -Dmain=... -Dargs="..." runs a class through the SDK's `tornado` launcher -->
+        <main>com.example.tornado.HelloTornado</main>
+        <args></args>
+    </properties>
+
+    <dependencies>
+        <!-- provided: the SDK puts its own TornadoVM jars on the module path at run time,
+             so Maven needs these only to compile, and they stay out of any packaged jar -->
+        <dependency>
+            <groupId>io.github.beehive-lab</groupId>
+            <artifactId>tornado-api</artifactId>
+            <version>${tornadovm.version}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.14.0</version>
+                <configuration>
+                    <!-- TornadoVM's annotation processor is not needed to compile; keep the build quiet -->
+                    <proc>none</proc>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.5.0</version>
+                <configuration>
+                    <executable>tornado</executable>
+                    <commandlineArgs>--jvm="-Dtornado.recover.bailout=False" -cp ${project.build.outputDirectory} ${main} ${args}</commandlineArgs>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <!-- Apple MLX library tasks: macOS, Apple Silicon, a metal SDK. On by itself on macOS, so IDEs see src/mlx/java. -->
+        <profile>
+            <id>mlx</id>
+            <activation>
+                <os><family>mac</family></os>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>io.github.beehive-lab</groupId>
+                    <artifactId>tornado-mlx</artifactId>
+                    <version>${tornadovm.version}</version>
+                    <scope>provided</scope>
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <version>3.6.0</version>
+                        <executions>
+                            <execution>
+                                <id>add-mlx-sources</id>
+                                <phase>generate-sources</phase>
+                                <goals><goal>add-source</goal></goals>
+                                <configuration>
+                                    <sources><source>src/mlx/java</source></sources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- NVIDIA cuBLAS library tasks: Linux, an NVIDIA GPU, a cuda SDK.
+             It compiles anywhere, so it is on by itself everywhere: you read FancyHybrid in the IDE on a Mac and run
+             it on a CUDA machine. -DskipCublas turns it off. -->
+        <profile>
+            <id>cublas</id>
+            <activation>
+                <property><name>!skipCublas</name></property>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>io.github.beehive-lab</groupId>
+                    <artifactId>tornado-cublas</artifactId>
+                    <version>${tornadovm.version}</version>
+                    <scope>provided</scope>
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <version>3.6.0</version>
+                        <executions>
+                            <execution>
+                                <id>add-cublas-sources</id>
+                                <phase>generate-sources</phase>
+                                <goals><goal>add-source</goal></goals>
+                                <configuration>
+                                    <sources><source>src/cublas/java</source></sources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>

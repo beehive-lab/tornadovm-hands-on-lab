@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The lab's Maven demos, for IDEs: open this folder in IntelliJ and it imports every demo below as a Maven module.
+     Each demo stays its own project, with its own TornadoVM version and Maven wrapper, and its run.sh builds it
+     alone; nothing here is inherited. Add a demo's folder below when it gets a pom.xml. -->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>uk.ac.manchester.tornado.lab</groupId>
+    <artifactId>tornadovm-hands-on-lab</artifactId>
+    <version>1.0</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>demos/L03-tornadoinsight</module>  <!-- TornadoInsight: RecursionExample, TornadoVM 7.1.0 -->
+        <module>demos/L15-maven-starter</module>   <!-- HelloTornado, FancyHybrid, FancyHybridMlx, TornadoVM 7.3.1 -->
+    </modules>
+</project>
