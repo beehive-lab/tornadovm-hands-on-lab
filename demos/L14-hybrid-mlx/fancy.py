@@ -5,7 +5,7 @@ The same look as devoxx/fancy.py in the CUDA demos repository (L04, L05), cut do
 
     fancy.py banner       TITLE SUBTITLE
     fancy.py act          N TITLE SUBTITLE
-    fancy.py hybrid-tasks LOG      MlxSgemvHybrid: per-task kernel times of the Java + MLX task graph
+    fancy.py hybrid-layer LOG      L15's FancyHybridMlx: per-task kernel times of the Java + MLX dense layer
     fancy.py hybrid-gemm  LOG      MlxGemmBenefit: the same SGEMM as a Java kernel and as Mlx::matmul
     fancy.py scoreboard   TITLE    every row the renders above recorded (in $FANCY_STATE), with checks
 
@@ -71,15 +71,15 @@ def act(number, title, subtitle):
     print()
 
 
-def bars(title, rows, unit, fmt="{:,.1f}", lower_is_better=True):
-    """rows: (label, value, color). One scale: the largest value fills the width. The best value gets a star."""
-    top = max(v for _, v, _ in rows)
+def bars(title, rows, unit, fmt="{:,.1f}", lower_is_better=True, top=None, label_width=34, width=WIDTH):
+    """rows: (label, value, color). One scale: `top`, or the largest value, fills the width. The best value gets a star."""
+    top = top or max(v for _, v, _ in rows)
     best = (min if lower_is_better else max)(v for _, v, _ in rows)
     print("    " + paint(BOLD, title))
     for label, value, color in rows:
-        n = max(1, round(value / top * WIDTH))
+        n = min(width, max(1, round(value / top * width)))
         star = paint(GREEN, " ★") if value == best else ""
-        print(f"    {pad(label, 34)} {paint(color, '█' * n)}{' ' * (WIDTH - n)} {fmt.format(value):>9} {unit}{star}")
+        print(f"    {pad(label, label_width)} {paint(color, '█' * n)}{' ' * (width - n)} {fmt.format(value):>9} {unit}{star}")
     print()
 
 
@@ -103,16 +103,17 @@ def big(text, color=GREEN):
 
 # --- demo renders ---------------------------------------------------------------------------------------------
 
-TASKS = {"MlxSgemvHybrid.scale": ("scale", "Java → MSL", BLUE), "mlx_matmul": ("Mlx::matmul", "Apple MLX", GREEN),
-         "MlxSgemvHybrid.bias": ("bias", "Java → MSL", BLUE)}
-ORDER = ("MlxSgemvHybrid.scale", "mlx_matmul", "MlxSgemvHybrid.bias")
+TASKS = {"DenseLayer.scale": ("scale", "Java → MSL", BLUE), "mlx_matmul": ("Mlx::matmul", "Apple MLX", GREEN),
+         "DenseLayer.biasRelu": ("bias", "Java → MSL", BLUE)}
+ORDER = ("DenseLayer.scale", "mlx_matmul", "DenseLayer.biasRelu")
 
 
-def hybrid_tasks(log):
+def hybrid_layer(log):
+    """L15's FancyHybridMlx with --enableProfiler console: a JSON block per execution, then its "execution i:" line."""
     text = read(log)
+    shape = re.search(r"Dense layer (\d+) x (\d+)", text)
     pipeline([TASKS[k] for k in ORDER])
-    # per iteration: the task kernel times printed before each "iteration i:" line
-    iterations, current, method = [], {}, None
+    executions, current, method = [], {}, None
     for line in text.splitlines():
         m = re.search(r'"METHOD":\s*"([^"]+)"', line)
         if m:
@@ -120,27 +121,27 @@ def hybrid_tasks(log):
         m = re.search(r'"TASK_KERNEL_TIME":\s*"?([0-9.]+)', line)
         if m and method:
             current[method] = float(m.group(1)) / 1000
-        m = re.match(r"iteration (\d+): (\w+)", line)
+            method = None
+        m = re.match(r"\s*execution (\d+):\s+[0-9.]+ ms\s+(\w+)", line)
         if m:
-            iterations.append((int(m.group(1)), m.group(2), dict(current)))
+            executions.append((int(m.group(1)), m.group(2), dict(current)))
             current = {}
-    print("    " + paint(BOLD, "kernel time per task, every iteration on the GPU") + paint(DIM, "   (µs)"))
-    for i, status, times in iterations:
-        cells = []
-        for key in ORDER:
-            t = times.get(key)
-            cells.append(f"{TASKS[key][0]:>11} {t:8.1f}" if t is not None else f"{TASKS[key][0]:>11} {'-':>8}")
+    print("    " + paint(BOLD, "kernel time per task, every execution") + paint(DIM, "   (µs, TornadoVM's profiler)"))
+    for i, status, times in executions:
+        cells = [f"{TASKS[key][0]:>11} {times[key]:8.1f}" if key in times else f"{TASKS[key][0]:>11} {'-':>8}" for key in ORDER]
         mark = paint(GREEN, "✔ correct") if status == "correct" else paint(RED, "✘ " + status)
-        print(f"    iteration {i}  " + "  ".join(cells) + "   " + mark)
-    if iterations:
-        print(paint(DIM, "    iteration 0 includes MLX's one-time setup"))
+        print(f"    execution {i}  " + "  ".join(cells) + "   " + mark)
+    if executions:
+        print(paint(DIM, "    execution 0 includes MLX's one-time setup; every execution has a new input"))
     print()
-    ok = "All iterations correct" in text and len(iterations) > 0
-    steady = [sum(t.values()) for i, _, t in iterations if i > 0]
+    ok = "All executions correct" in text and len(executions) > 0
+    steady = [t for i, _, t in executions if i > 0 and len(t) == len(ORDER)]
     if steady:
-        big(f"Java kernels and MLX share device buffers: {statistics.median(steady):.0f} µs of kernel time per pass, no host round trip")
-    record("Hybrid: Java → MLX → Java", f"{len(iterations)} iterations, all correct" if ok else "INCORRECT", ok,
-           "hybrid: every iteration correct")
+        gemv = statistics.median(t["mlx_matmul"] for t in steady)
+        total = statistics.median(sum(t.values()) for t in steady)
+        big(f"Java kernels and MLX share device buffers: {total:.0f} µs of kernel time per pass, no host round trip")
+    record("L15 FancyHybridMlx", f"{shape.group(1)} x {shape.group(2)}, {len(executions)} executions correct" if ok and shape else "INCORRECT",
+           ok, "layer: every execution correct")
 
 
 def hybrid_gemm(log):
@@ -184,7 +185,8 @@ def main(argv):
     if len(argv) < 2:
         print(__doc__)
         return 1
-    handlers = {"banner": banner, "act": act, "hybrid-tasks": hybrid_tasks, "hybrid-gemm": hybrid_gemm,
+    handlers = {"banner": banner, "act": act, "hybrid-layer": hybrid_layer,
+                "hybrid-gemm": hybrid_gemm,
                 "scoreboard": scoreboard}
     handlers[argv[1]](*argv[2:])
     return 0

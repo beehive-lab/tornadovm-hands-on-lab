@@ -36,7 +36,7 @@ For L06–L10 (jitLLM), also run `demos/L06-jitllm/setup.sh` once.
 | [L11](demos/L11-flink-sql-gpu) | An SQL operator on the GPU | 111 | ✗ | ✓ | ✗ |
 | [L12](demos/L12-flink-fleet-triage) | Fleet telemetry triage | 114 | ✗ | ✓ | ✗ |
 | [L13](demos/L13-kotlin) | TornadoVM for Kotlin (work in progress) | 117 | ✓ | ✓ | ✓ |
-| [L14](demos/L14-hybrid-mlx) | Hybrid API with Apple MLX (the Metal twin of L05) | – | ✓ | ✗ | ✗ |
+| [L14](demos/L14-hybrid-mlx) | Hybrid API with Apple MLX: L15's FancyHybridMlx, then Java SGEMM against MLX (the Metal twin of L05) | – | ✓ | ✗ | ✗ |
 | [L15](demos/L15-maven-starter) | Your own Maven project, then the Hybrid API (`FancyHybrid`) | – | ✓ | ✓ | ◐ |
 
 Each demo's README explains its ◐ or ✗.
