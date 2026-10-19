@@ -38,8 +38,8 @@ echo "   TornadoVM budget: ${TORNADO_DEVICE_MEMORY:-4GB (default)}   jitLLM budg
 echo "== demos for this platform"
 for b in $BACKENDS; do
   case "$b" in
-    metal)  echo "   metal:  L01-L03, L06-L10, L13, L14 (L14 also needs the $MLX_TORNADOVM_SDK SDK)" ;;
-    cuda)   echo "   cuda:   all of L01-L13 (L04-L05 also need the $CUDA_DEMOS_TORNADOVM_SDK SDK; L11-L12 their own setup, see demos/L11-flink-sql-gpu)" ;;
-    opencl) echo "   opencl: L01-L03, L06-L10, L13" ;;
+    metal)  echo "   metal:  L01-L03, L06-L10, L13-L15 (L14 also needs the $MLX_TORNADOVM_SDK SDK, L15 the $STARTER_TORNADOVM_SDK_MAC SDK)" ;;
+    cuda)   echo "   cuda:   L01-L13, L15 (L04-L05 also need the $CUDA_DEMOS_TORNADOVM_SDK SDK, L15 the $STARTER_TORNADOVM_SDK_LINUX SDK; L11-L12 their own setup, see demos/L11-flink-sql-gpu)" ;;
+    opencl) echo "   opencl: L01-L03, L06-L10, L13, L15 step 1 (the $STARTER_TORNADOVM_SDK_LINUX_OPENCL SDK)" ;;
   esac
 done

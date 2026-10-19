@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <!-- Runs on the TornadoVM SDK through tornado.args, which demos/L15-maven-starter/run.sh writes. -->
+  <configuration default="false" name="L15 2 · FancyHybrid (cuBLAS, NVIDIA)" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="com.example.tornado.hybrid.FancyHybrid" />
+    <module name="tornadovm-maven-starter" />
+    <option name="VM_PARAMETERS" value="@tornado.args" />
+    <option name="WORKING_DIRECTORY" value="$MODULE_WORKING_DIR$" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
