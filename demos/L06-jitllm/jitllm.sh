@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # L06 · runs the jitLLM that setup.sh built, on the GPU, with its JDK, TornadoVM build and model
 #   ./jitllm.sh          one generation of the example prompt
+#   ./jitllm.sh chat     a chat in the terminal, one turn after another, until Ctrl-D
 #   ./jitllm.sh serve    the OpenAI-compatible server on port 8090 (L10)
 # Adds --gpu, --gpu-memory $JITLLM_GPU_MEMORY and the model.
 # Prints the command before it runs it.
@@ -22,6 +23,10 @@ if [ "${1:-}" = serve ]; then
     pkill -9 -f "$SERVER" || true
   fi
   set -- serve --port 8090 -m "$MODEL" --gpu --gpu-memory "$JITLLM_GPU_MEMORY" "$@"
+elif [ "${1:-}" = chat ]; then
+  shift
+  # 4096 tokens of context, so a few turns fit; the default of 512 fills up after one or two answers
+  set -- chat -m "$MODEL" --gpu --gpu-memory "$JITLLM_GPU_MEMORY" -c 4096 "$@"
 else
   set -- --gpu --gpu-memory "$JITLLM_GPU_MEMORY" --model "$MODEL" --prompt "Explain GPU acceleration in one sentence."
 fi

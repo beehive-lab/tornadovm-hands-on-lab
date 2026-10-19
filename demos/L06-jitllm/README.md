@@ -20,6 +20,12 @@ To run the example prompt, "Explain GPU acceleration in one sentence.":
 demos/L06-jitllm/jitllm.sh
 ```
 
+To chat in the terminal instead, turn after turn, until Ctrl-D:
+
+```bash
+demos/L06-jitllm/jitllm.sh chat
+```
+
 To start the OpenAI-compatible server instead, which L10 uses, on port 8090:
 
 ```bash
@@ -34,6 +40,7 @@ It first stops any jitLLM server left from an earlier run, which frees port 8090
 
 - A pause before the first token: TornadoVM is compiling the kernels, once.
 - The answer, then `achieved tok/s: …`.
+- With `chat`: a prompt for your first message; the pause before the first answer is the kernel compilation, and later turns answer straight away.
 - With `serve`: the server starts, and `curl -s localhost:8090/v1/models` returns `"id":"gemma-4-E2B-it-Q4_0"`.
 
 ## GPU memory
