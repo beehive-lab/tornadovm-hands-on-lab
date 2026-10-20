@@ -30,6 +30,7 @@ demos/L08-tornadoviz/TornadoViz/
 demos/L10-devoxxgenie/DevoxxGenieIDEAPlugin/
 demos/L11-flink-sql-gpu/flink-accelerator-tornadovm/
 demos/L13-kotlin/TornadoVM/
+demos/L16-jitllm-quarkus-langchain4j/JitLLM-Quarkus-Langchain4j-Demo/
 
 # Models are downloaded, never committed: L06 setup.sh (*.gguf, *.gguf.part while downloading)
 *.gguf

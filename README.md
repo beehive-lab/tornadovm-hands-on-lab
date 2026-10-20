@@ -1,6 +1,6 @@
 # TornadoVM Hands-On Lab
 
-Every demo from *From Install to Insight: A Hands-On GPU Lab for Java Developers*, reproducible on macOS and Linux. The demos are numbered `L01`–`L15` in the order the lab runs them.
+Every demo from *From Install to Insight: A Hands-On GPU Lab for Java Developers*, reproducible on macOS and Linux. The demos are numbered `L01`–`L16` in the order the lab runs them.
 
 ## Setup once
 
@@ -14,6 +14,7 @@ scripts/check-env.sh      # prints the SDK, backends and GPU memory, and which d
 ```
 
 For L06–L10 (jitLLM), also run `demos/L06-jitllm/setup.sh` once.
+For L16 (Quarkus + LangChain4j), run `demos/L16-jitllm-quarkus-langchain4j/setup.sh` once.
 
 **Run every command from the root of this repository.** Scripts print each command before running it. Anything a demo clones or downloads stays inside its folder, and git ignores it.
 
@@ -38,6 +39,7 @@ For L06–L10 (jitLLM), also run `demos/L06-jitllm/setup.sh` once.
 | [L13](demos/L13-kotlin) | TornadoVM for Kotlin (work in progress) | 117 | ✓ | ✓ | ✓ |
 | [L14](demos/L14-hybrid-mlx) | Hybrid API with Apple MLX: L15's FancyHybridMlx, then Java SGEMM against MLX (the Metal twin of L05) | – | ✓ | ✗ | ✗ |
 | [L15](demos/L15-maven-starter) | Your own Maven project, then the Hybrid API (`FancyHybrid`) | – | ✓ | ✓ | ◐ |
+| [L16](demos/L16-jitllm-quarkus-langchain4j) | jitLLM in a Quarkus app, through LangChain4j: a streamed summary | – | ✓ | ✓ | ✓ |
 
 Each demo's README explains its ◐ or ✗.
 
@@ -65,6 +67,8 @@ If your GPU has less than a budget, lower the budget. On macOS the GPU can use o
 - [ ] Pin commits for every external repository in `env/versions.env`.
 - [ ] Merge jitLLM `feature/stream-usage` into `main`, so DevoxxGenie shows token counts with the L06 build (L10).
 - [ ] Add a 7.1.0 SDK profile to the CUDA demos repository; it pins 7.0.0 (L04, L05).
+- [ ] Rehearse L16 on Linux · CUDA and OpenCL with the 7.3.1 SDKs; the demos repository was tested on CUDA with 7.0.1 only.
+- [ ] Switch L16 to a quarkus-langchain4j release once the `jitllm` provider ([#2888](https://github.com/quarkiverse/quarkus-langchain4j/pull/2888)) is in one; `setup.sh` builds the pull request until then.
 - [ ] Rehearse L15 on Linux · CUDA: `FancyHybrid` (cuBLAS, `withCUDAGraph()`) compiles but has not run on an NVIDIA GPU yet.
 
 ## Layout
