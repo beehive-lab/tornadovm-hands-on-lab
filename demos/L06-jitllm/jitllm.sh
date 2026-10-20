@@ -26,9 +26,9 @@ if [ "${1:-}" = serve ]; then
 elif [ "${1:-}" = chat ]; then
   shift
   # 4096 tokens of context, so a few turns fit; the default of 512 fills up after one or two answers
-  set -- chat -m "$MODEL" --gpu --gpu-memory "$JITLLM_GPU_MEMORY" -c 4096 "$@"
+  set -- chat -m "$MODEL" --gpu --gpu-memory "$JITLLM_GPU_MEMORY" --fp32-kv-cache -c 4096 "$@"
 else
-  set -- --gpu --gpu-memory "$JITLLM_GPU_MEMORY" --model "$MODEL" --prompt "Explain GPU acceleration in one sentence."
+  set -- --gpu --gpu-memory "$JITLLM_GPU_MEMORY" --model "$MODEL" --fp32-kv-cache --prompt "Explain GPU acceleration in one sentence."
 fi
 echo "\$ ./jitllm $*"
 exec ./jitllm "$@"
