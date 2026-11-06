@@ -1,6 +1,6 @@
 # L17 · Matrix multiplication: plain Java, then the GPU with JIT, then AOT
 
-Start from a matrix multiplication in plain Java, with no TornadoVM in it. Make it a GPU kernel yourself, with TornadoInsight checking the code as you type, and run it with TornadoVM's JIT compiler from IntelliJ. Then start the same application ahead of time: from a Project Leyden AOT cache, and as a GraalVM native image. This is the flow of slide 33 of *Write Once, Accelerate Everywhere* (JUG Paris).
+Start from a matrix multiplication in plain Java, with no TornadoVM in it. Make it a GPU kernel yourself, with TornadoInsight checking the code as you type, and run it with TornadoVM's JIT compiler from IntelliJ. Then start the same application ahead of time: from a Project Leyden AOT cache, and as a GraalVM native image. This is the flow of slide 33 of *Write Once, Accelerate Everywhere*.
 
 **Runs on:** every backend · **Needs:** [Setup once](../../README.md#setup-once), TornadoVM 8.0.0, JDK 25 or newer, IntelliJ IDEA with [TornadoInsight](../L03-tornadoinsight), and a GraalVM for JDK 25+ for the native image · **Code:** [`MatrixMultiplication.java`](src/main/java/com/example/matmul/MatrixMultiplication.java)
 
