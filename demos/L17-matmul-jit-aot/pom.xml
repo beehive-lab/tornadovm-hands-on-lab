@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- L17 · Matrix multiplication, from plain Java to a GPU kernel, then started ahead of time.
+       ./mvnw package     target/classes, and target/matmul.jar for the AOT steps (an AOT cache accepts jars only)
+     As committed, the project is plain Java and has no dependency. Step 1 of the exercise adds the TornadoVM API
+     below (see README.md). Keep tornadovm.version in step with AOT_TORNADOVM_MAVEN in env/versions.env. -->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.example</groupId>
+    <artifactId>l17-matmul</artifactId>
+    <version>1.0</version>
+
+    <properties>
+        <maven.compiler.release>22</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- 8.0.0: the first SDK with the Leyden AOT cache (the aotCache option of tornado) and tornado-native-image -->
+        <tornadovm.version>8.0.0-jdk22plus</tornadovm.version>
+    </properties>
+
+    <dependencies>
+        <!-- Step 1 · add io.github.beehive-lab:tornado-api:${tornadovm.version} here, scope provided (README.md) -->
+    </dependencies>
+
+    <build>
+        <finalName>matmul</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.14.0</version>
+                <configuration>
+                    <!-- TornadoVM's annotation processor is not needed to compile; keep the build quiet -->
+                    <proc>none</proc>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

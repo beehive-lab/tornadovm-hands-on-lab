@@ -15,8 +15,11 @@ demos/L08-tornadoviz/bytecodes-jitllm/
 demos/L03-tornadoinsight/target/
 demos/L14-hybrid-mlx/build/
 demos/L15-maven-starter/target/
+# L17 run.sh and aot.sh: ./mvnw package, the AOT cache (target/matmul.aot) and the native image (target/matmul)
+demos/L17-matmul-jit-aot/target/
 # L15 run.sh: the JVM flags of its SDK, for the IntelliJ run configurations in demos/L15-maven-starter/.run/
 demos/L15-maven-starter/tornado.args
+demos/L17-matmul-jit-aot/tornado.args
 # benchmark tables from earlier GEMM runs
 stats-mxm-*.txt
 results/

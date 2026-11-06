@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <!-- Plain Java, no TornadoVM: the starting point, and the CPU time to beat. -->
+  <configuration default="false" name="L17 1 · MatrixMultiplication (plain Java)" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="com.example.matmul.MatrixMultiplication" />
+    <module name="l17-matmul" />
+    <option name="PROGRAM_PARAMETERS" value="1024 5" />
+    <option name="WORKING_DIRECTORY" value="$MODULE_WORKING_DIR$" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

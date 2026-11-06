@@ -1,0 +1,13 @@
+<component name="ProjectRunConfigurationManager">
+  <!-- Runs on the TornadoVM SDK, JIT-compiling the kernel, through tornado.args, which demos/L17-matmul-jit-aot/run.sh writes. -->
+  <configuration default="false" name="L17 2 · MatrixMultiplication (TornadoVM JIT)" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="com.example.matmul.MatrixMultiplication" />
+    <module name="l17-matmul" />
+    <option name="PROGRAM_PARAMETERS" value="1024 5" />
+    <option name="VM_PARAMETERS" value="@tornado.args" />
+    <option name="WORKING_DIRECTORY" value="$MODULE_WORKING_DIR$" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

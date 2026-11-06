@@ -15,5 +15,6 @@
     <modules>
         <module>demos/L03-tornadoinsight</module>  <!-- TornadoInsight: RecursionExample, TornadoVM 7.1.0 -->
         <module>demos/L15-maven-starter</module>   <!-- HelloTornado, FancyHybrid, FancyHybridMlx, TornadoVM 7.3.1 -->
+        <module>demos/L17-matmul-jit-aot</module>  <!-- MatrixMultiplication, plain Java; the exercise adds TornadoVM 8.0.0 -->
     </modules>
 </project>
