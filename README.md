@@ -40,7 +40,7 @@ For L16 (Quarkus + LangChain4j), run `demos/L16-jitllm-quarkus-langchain4j/setup
 | [L14](demos/L14-hybrid-mlx) | Hybrid API with Apple MLX: L15's FancyHybridMlx, then Java SGEMM against MLX (the Metal twin of L05) | – | ✓ | ✗ | ✗ |
 | [L15](demos/L15-maven-starter) | Your own Maven project, then the Hybrid API (`FancyHybrid`) | – | ✓ | ✓ | ◐ |
 | [L16](demos/L16-jitllm-quarkus-langchain4j) | jitLLM in a Quarkus app, through LangChain4j: a streamed summary | – | ✓ | ✓ | ✓ |
-| [L17](demos/L17-matmul-jit-aot) | Matrix multiplication: plain Java, then the GPU with JIT (TornadoInsight, IntelliJ), then AOT (Leyden, native image) | 33 | ✓ | ✓ | ✓ |
+| [L17](demos/L17-matmul-jit-aot) | Matrix multiplication: plain Java, then the GPU with JIT (TornadoInsight, IntelliJ), inside TC with tcirviz, then AOT (Leyden, native image) | 33 | ✓ | ✓ | ✓ |
 
 Each demo's README explains its ◐ or ✗.
 

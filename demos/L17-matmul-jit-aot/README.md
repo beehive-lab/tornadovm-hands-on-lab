@@ -1,6 +1,6 @@
 # L17 · Matrix multiplication: plain Java, then the GPU with JIT, then AOT
 
-Start from a matrix multiplication in plain Java, with no TornadoVM in it. Make it a GPU kernel yourself, with TornadoInsight checking the code as you type, and run it with TornadoVM's JIT compiler from IntelliJ. Then start the same application ahead of time: from a Project Leyden AOT cache, and as a GraalVM native image. This is the flow of slide 33 of *Write Once, Accelerate Everywhere*.
+Start from a matrix multiplication in plain Java, with no TornadoVM in it. Make it a GPU kernel yourself, with TornadoInsight checking the code as you type, and run it with TornadoVM's JIT compiler from IntelliJ. Look inside with tcirviz: the method at every stage of TC, TornadoVM's kernel compiler, from bytecode to GPU code. Then start the same application ahead of time: from a Project Leyden AOT cache, and as a GraalVM native image. This is the flow of slide 33 of *Write Once, Accelerate Everywhere*.
 
 **Runs on:** every backend · **Needs:** [Setup once](../../README.md#setup-once), TornadoVM 8.1.0, JDK 25 or newer, IntelliJ IDEA with [TornadoInsight](../L03-tornadoinsight), and a GraalVM for JDK 25+ for the native image · **Code:** [`MatrixMultiplication.java`](src/main/java/com/example/matmul/MatrixMultiplication.java)
 
@@ -78,6 +78,66 @@ To see the kernel TornadoVM generated:
 ```bash
 cd demos/L17-matmul-jit-aot && tornado --printKernel -cp target/matmul.jar com.example.matmul.MatrixMultiplication 1024 1
 ```
+
+### Step 4 · Look inside: the Java method on the GPU, with tcirviz
+
+`--printKernel` shows only the result. [tcirviz](https://github.com/mikepapadim/tornadovm-tcirviz) shows how TC, TornadoVM's kernel compiler, gets there. It lays out the method at every step, from Java to bytecode, through TC's IR after every stage and pass, to the Metal, OpenCL or CUDA code. Click a Java line, a bytecode or an IR value and every pane highlights what came from it. It only compiles, so it needs no GPU and you can pick any of the three targets on any machine.
+
+```bash
+demos/L17-matmul-jit-aot/tcirviz.sh          # the UI on kernels/MatrixMultiplication.java, at http://127.0.0.1:7878/
+demos/L17-matmul-jit-aot/tcirviz.sh app      # the UI on your own class from step 2: Open class… → MatrixMultiplication
+demos/L17-matmul-jit-aot/tcirviz.sh print    # no browser: the generated kernel; [metal|opencl|cuda] [size] [method]
+```
+
+The first run clones tcirviz next to the script, at the commit pinned in [`env/versions.env`](../../env/versions.env), and builds it against the 8.1.0 SDK in a few seconds. [`kernels/MatrixMultiplication.java`](kernels/MatrixMultiplication.java) holds the exercise's method in three forms: `float[]` with `@Parallel`, the `FloatArray` version of the solution, and the Kernel API.
+
+In the UI, set `size` to `1024` in the *Arguments* row. At run time, TornadoVM compiles a task for the arguments it runs with, and tcirviz does the same. Then step through the chips at the top (`←` / `→`):
+
+| Stage | What happens to `matrixMultiplication` |
+|---|---|
+| **bytecode** | What `javac` made of it: three loops of `iload`/`imul`/`iadd` index arithmetic around `faload`, `fmul`, `fadd` and a `fastore`. |
+| **input** | TC's IR, in SSA form. Loop variables become block arguments (`^bci24(%k.1: i32, %sum.1: f32)`), and the two `@Parallel` loops are marked `[parallel<iv = 0>]`. Array accesses are still Java-level: `%5 = array.load %a[%4] : f32`. |
+| **specialise** | `size` becomes a constant: `%size.1 = const 1024 : i32`. Every loop bound is now known. |
+| **parallel** | The `@Parallel` loops become the GPU grid. `i` starts at `tornado.thread_id.global<dim = 1>`, `j` at `<dim = 0>`, and each one steps by the grid size (`tornado.global_size`), with a guard against `int` overflow. TornadoVM launches one thread per `(i, j)`, so each thread runs one iteration. The loops stay so that a smaller grid would still cover the matrix. Only `k` remains a real loop. |
+| **optimize** | `canonicalize` folds away `0 + thread_id`. `dce` deletes the dead start values. `licm` moves `i * size` out of the `j` and `k` loops, and `gvn` merges the two copies of it, one for `a` and one for `c`. Press **Δ** on a pass to see its diff. |
+| **abi** | Arrays become pointers. `array.load %a[x]` becomes `load` at `a + 16 + 4·x`: the 16 bytes are the array header that TornadoVM keeps in front of the data on the device. |
+| **optimize.post-abi** | `licm` again: the `a + 16` data pointers (`a_data`, `b_data`, `c_data`) move out of all three loops. |
+| **structure** | The block graph becomes `loop`, `if` and `break`. It is still target-neutral. Press **⧉** for the control-flow graph, with the loop back-edges in orange. |
+| **emit** | Metal, OpenCL C or CUDA C++. Each line of target code ends with a comment that names its Java line. |
+
+**You should see** at the end, on Metal (`tcirviz.sh print`, the body of the kernel):
+
+```c
+  gid_x = (int) _thread_position_in_grid.x;  // MatrixMultiplication.java:18
+  ...
+  a_data = (device float *) (a + 16L);  // MatrixMultiplication.java:21
+  b_data = (device float *) (b + 16L);  // MatrixMultiplication.java:21
+  c_data = (device float *) (c + 16L);  // MatrixMultiplication.java:23
+  i = (int) _thread_position_in_grid.y;
+  for (; i < 1024; v36 = (long) i + v5, i = (int) (v36 > 2147483647L ? 2147483647L : v36)) {
+    i_off = (int) ((uint) i * (uint) 1024);  // MatrixMultiplication.java:21
+    j = gid_x;
+    while (j < 1024) {
+      k = 0;
+      sum = 0.0f;
+      while (k < 1024) {
+        sum = sum + a_data[(int) ((uint) i_off + (uint) k)] * b_data[(int) ((uint) (int) ((uint) k * (uint) 1024) + (uint) j)];  // MatrixMultiplication.java:21
+        k = k + 1;  // MatrixMultiplication.java:20
+      }
+      c_data[(int) ((uint) i_off + (uint) j)] = sum;  // MatrixMultiplication.java:23
+      ...
+```
+
+This is the kernel the runtime installs. For your class at 1024, `tornado --printKernel` from step 3 prints the same code, line for line.
+
+Try:
+
+1. **Switch the target** to OpenCL or CUDA. The dot product becomes `fma(...)` (`fmaf` on CUDA). On Metal, TC leaves `sum + a * b` as it is, and the fusing is left to Metal's own compiler, which runs with fast math.
+2. **Follow `sum`.** Click `sum +=` on the Java line. The *Journey* bar traces it from `fadd` in the IR to the line of Metal that uses it.
+3. **Pick `matrixMultiplicationFloatArray`** in the kernel list. The GPU code is the same as for `float[]`: `get` and `set` become the same loads and stores.
+4. **Clear `size`**, so it is not known when compiling. TC refuses the `@Parallel` kernel with `TC-E3103: the bounds of the @Parallel loops are not compile-time constants after specialisation, so no launch domain can be derived`. Then pick `matrixMultiplicationKernel`: it still compiles, with `while (k < size)` reading `size` at run time. With the Kernel API, the `WorkerGrid2D` you pass sets the launch grid, so TC does not need the bounds.
+
+From the terminal: `tcirviz.sh print opencl`, `tcirviz.sh print metal "" matrixMultiplicationKernel`.
 
 ## Phase 2 · Ahead of time: Project Leyden and GraalVM native image
 
