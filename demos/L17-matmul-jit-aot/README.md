@@ -2,22 +2,22 @@
 
 Start from a matrix multiplication in plain Java, with no TornadoVM in it. Make it a GPU kernel yourself, with TornadoInsight checking the code as you type, and run it with TornadoVM's JIT compiler from IntelliJ. Then start the same application ahead of time: from a Project Leyden AOT cache, and as a GraalVM native image. This is the flow of slide 33 of *Write Once, Accelerate Everywhere*.
 
-**Runs on:** every backend · **Needs:** [Setup once](../../README.md#setup-once), TornadoVM 8.0.0, JDK 25 or newer, IntelliJ IDEA with [TornadoInsight](../L03-tornadoinsight), and a GraalVM for JDK 25+ for the native image · **Code:** [`MatrixMultiplication.java`](src/main/java/com/example/matmul/MatrixMultiplication.java)
+**Runs on:** every backend · **Needs:** [Setup once](../../README.md#setup-once), TornadoVM 8.1.0, JDK 25 or newer, IntelliJ IDEA with [TornadoInsight](../L03-tornadoinsight), and a GraalVM for JDK 25+ for the native image · **Code:** [`MatrixMultiplication.java`](src/main/java/com/example/matmul/MatrixMultiplication.java)
 
 The repository holds only the starting point: plain Java and a `pom.xml` with no dependency. You make every TornadoVM change; don't commit them.
 
 ## Setup, once
 
-The Leyden AOT cache and `tornado-native-image` ship from TornadoVM 8.0.0, so this demo runs on its own 8.0.0 SDK:
+The Leyden AOT cache and `tornado-native-image` ship from TornadoVM 8.0.0, this demo runs on its own 8.1.0 SDK:
 
 ```bash
-sdk install tornadovm 8.0.0-jdk22plus-metal      # macOS;  or -cuda (NVIDIA), -opencl (Intel, AMD)
+sdk install tornadovm 8.1.0-jdk22plus-metal      # macOS;  or -cuda (NVIDIA), -opencl (Intel, AMD)
                                                  # answer n to making it the default
 sdk install java 25.0.2-open                     # the lab's JDK; the AOT cache needs JDK 25+
 sdk list java | grep graal                       # pick a GraalVM for JDK 25+, for the native image
 ```
 
-In IntelliJ, open the lab folder (`File → Open…`, the repository root): its [`pom.xml`](../../pom.xml) imports L17 as a Maven module. In `Settings → TornadoInsight`, set the TornadoVM root to the 8.0.0 SDK, `~/.sdkman/candidates/tornadovm/8.0.0-jdk22plus-metal` (or `-cuda`, `-opencl`).
+In IntelliJ, open the lab folder (`File → Open…`, the repository root): its [`pom.xml`](../../pom.xml) imports L17 as a Maven module. In `Settings → TornadoInsight`, set the TornadoVM root to the 8.1.0 SDK, `~/.sdkman/candidates/tornadovm/8.1.0-jdk22plus-metal` (or `-cuda`, `-opencl`).
 
 ## Phase 1 · From plain Java to the GPU, with JIT
 
@@ -31,7 +31,7 @@ demos/L17-matmul-jit-aot/run.sh            # [size] [iterations], default 1024 5
 
 `matrixMultiplication` computes `C = A · B` for square matrices stored row by row in flat `float[]` arrays: three nested loops, one dot product per output element. Write down the time per execution: this is the CPU time to beat, about 900 ms at 1024 × 1024 on an M4 Pro.
 
-`run.sh` also writes `tornado.args`, the JVM flags of the 8.0.0 SDK, which the IntelliJ run configuration of step 3 uses.
+`run.sh` also writes `tornado.args`, the JVM flags of the 8.1.0 SDK, which the IntelliJ run configuration of step 3 uses.
 
 ### Step 1 · Add the TornadoVM API to `pom.xml`
 
@@ -41,7 +41,7 @@ Replace the comment in `<dependencies>` with:
 <dependency>
     <groupId>io.github.beehive-lab</groupId>
     <artifactId>tornado-api</artifactId>
-    <version>${tornadovm.version}</version>   <!-- 8.0.0-jdk22plus -->
+    <version>${tornadovm.version}</version>   <!-- 8.1.0-jdk22plus -->
     <scope>provided</scope>
 </dependency>
 ```

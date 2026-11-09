@@ -16,11 +16,16 @@
         <maven.compiler.release>22</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- 8.0.0: the first SDK with the Leyden AOT cache (the aotCache option of tornado) and tornado-native-image -->
-        <tornadovm.version>8.0.0-jdk22plus</tornadovm.version>
+        <tornadovm.version>8.1.0-jdk22plus</tornadovm.version>
     </properties>
 
     <dependencies>
         <!-- Step 1 · add io.github.beehive-lab:tornado-api:${tornadovm.version} here, scope provided (README.md) -->
+        <!-- <dependency>
+            <groupId>io.github.beehive-lab</groupId>
+            <artifactId>tornado-api</artifactId>
+            <version>${tornadovm.version}</version>
+        </dependency> -->
     </dependencies>
 
     <build>
