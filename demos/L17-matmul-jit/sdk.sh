@@ -1,10 +1,10 @@
 # L17 · sourced by run.sh and tcirviz.sh: switches to this demo's TornadoVM SDK and writes tornado.args.
-# L17 runs on its own SDK, $AOT_TORNADOVM_SDK_*, the one L18 starts ahead of time: TC and tcirviz need 8.0.0+.
+# L17 runs on its own SDK, $MATMUL_TORNADOVM_SDK_*, shared with L18: TC and tcirviz need 8.0.0+.
 source "$HERE/../../scripts/lib.sh"
 
 case "$(uname -s)" in
-  Darwin) SDK_ID="$AOT_TORNADOVM_SDK_MAC" ;;
-  *) if has_backend cuda; then SDK_ID="$AOT_TORNADOVM_SDK_LINUX"; else SDK_ID="$AOT_TORNADOVM_SDK_LINUX_OPENCL"; fi ;;
+  Darwin) SDK_ID="$MATMUL_TORNADOVM_SDK_MAC" ;;
+  *) if has_backend cuda; then SDK_ID="$MATMUL_TORNADOVM_SDK_LINUX"; else SDK_ID="$MATMUL_TORNADOVM_SDK_LINUX_OPENCL"; fi ;;
 esac
 L17_SDK="${SDKMAN_DIR:-$HOME/.sdkman}/candidates/tornadovm/$SDK_ID"
 if [ ! -d "$L17_SDK" ]; then

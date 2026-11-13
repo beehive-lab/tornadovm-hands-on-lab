@@ -30,7 +30,7 @@ case "$MODE" in
     note "Set size to 1024 in the Arguments row: TornadoVM compiles the kernel for the size it runs with"
     run tornado --tcirviz kernels/MatrixMultiplication.java ;;
   app)
-    run ./mvnw -q -Dtornadovm.version="$AOT_TORNADOVM_MAVEN" package
+    run ./mvnw -q -Dtornadovm.version="$MATMUL_TORNADOVM_MAVEN" package
     note "Open class… → com.example.matmul.MatrixMultiplication: your version of the exercise"
     PARAMS="--classpath target/matmul.jar --sourcepath src/main/java"
     echo "\$ tornado --tcirviz --params \"$PARAMS\""

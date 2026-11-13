@@ -8,7 +8,7 @@ The repository holds only the starting point: plain Java and a `pom.xml` with no
 
 ## Setup, once
 
-L17 runs on its own 8.1.0 SDK, the one L18 starts ahead of time; TC, the kernel compiler tcirviz shows, ships from 8.0.0:
+L17 runs on its own 8.1.0 SDK; TC, the kernel compiler tcirviz shows, ships from 8.0.0:
 
 ```bash
 sdk install tornadovm 8.1.0-jdk22plus-metal      # macOS;  or -cuda (NVIDIA), -opencl (Intel, AMD)
@@ -138,9 +138,9 @@ Try:
 
 From the terminal: `tcirviz.sh print opencl`, `tcirviz.sh print metal "" matrixMultiplicationKernel`.
 
-## Next: L18, ahead of time
+## Next: L18
 
-[L18](../L18-matmul-aot) starts this application ahead of time, from a Project Leyden AOT cache and as a GraalVM native image. It ships the solution below as its class, so it runs whatever state your exercise is in.
+[L18](../L18-matmul-aot) continues with this application. It ships the solution below as its class, so it runs whatever state your exercise is in.
 
 ## Solution
 

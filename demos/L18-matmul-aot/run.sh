@@ -6,5 +6,5 @@ set -euo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
 source "$HERE/sdk.sh"
 
-run ./mvnw -q -Dtornadovm.version="$AOT_TORNADOVM_MAVEN" package
+run ./mvnw -q -Dtornadovm.version="$MATMUL_TORNADOVM_MAVEN" package
 run tvm -cp target/matmul.jar "$MAIN" "${1:-1024}" "${2:-5}" ${3:+"$3"}

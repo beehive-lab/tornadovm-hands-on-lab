@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- L17 · Matrix multiplication, from plain Java to a GPU kernel; L18 starts the result ahead of time.
+<!-- L17 · Matrix multiplication, from plain Java to a GPU kernel.
        ./mvnw package     target/classes and target/matmul.jar
      As committed, the project is plain Java and has no dependency. Step 1 of the exercise adds the TornadoVM API
-     below (see README.md). Keep tornadovm.version in step with AOT_TORNADOVM_MAVEN in env/versions.env. -->
+     below (see README.md). Keep tornadovm.version in step with MATMUL_TORNADOVM_MAVEN in env/versions.env. -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -15,7 +15,7 @@
     <properties>
         <maven.compiler.release>22</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <!-- 8.0.0: the first SDK with the Leyden AOT cache (the aotCache option of tornado) and tornado-native-image -->
+        <!-- 8.0.0: the first SDK with TC, the kernel compiler tcirviz shows -->
         <tornadovm.version>8.1.0-jdk22plus</tornadovm.version>
     </properties>
 

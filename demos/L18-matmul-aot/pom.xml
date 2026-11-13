@@ -2,7 +2,7 @@
 <!-- L18 · Matrix multiplication on the GPU, the finished application of L17, started ahead of time.
        ./mvnw package     target/matmul.jar, which aot.sh starts three ways (an AOT cache accepts jars only)
      tornado-api is provided: Maven compiles against it, the SDK brings its own jars at run time.
-     Keep tornadovm.version in step with AOT_TORNADOVM_MAVEN in env/versions.env. -->
+     Keep tornadovm.version in step with MATMUL_TORNADOVM_MAVEN in env/versions.env. -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">

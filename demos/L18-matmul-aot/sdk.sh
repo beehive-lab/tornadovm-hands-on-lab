@@ -1,10 +1,10 @@
 # L18 · sourced by run.sh and aot.sh: switches to this demo's TornadoVM SDK and writes tornado.args.
-# L18 runs on its own SDK, $AOT_TORNADOVM_SDK_*: the Leyden AOT cache and tornado-native-image ship from 8.0.0.
+# L18 runs on its own SDK, $MATMUL_TORNADOVM_SDK_*: the Leyden AOT cache and tornado-native-image ship from 8.0.0.
 source "$HERE/../../scripts/lib.sh"
 
 case "$(uname -s)" in
-  Darwin) SDK_ID="$AOT_TORNADOVM_SDK_MAC" ;;
-  *) if has_backend cuda; then SDK_ID="$AOT_TORNADOVM_SDK_LINUX"; else SDK_ID="$AOT_TORNADOVM_SDK_LINUX_OPENCL"; fi ;;
+  Darwin) SDK_ID="$MATMUL_TORNADOVM_SDK_MAC" ;;
+  *) if has_backend cuda; then SDK_ID="$MATMUL_TORNADOVM_SDK_LINUX"; else SDK_ID="$MATMUL_TORNADOVM_SDK_LINUX_OPENCL"; fi ;;
 esac
 L18_SDK="${SDKMAN_DIR:-$HOME/.sdkman}/candidates/tornadovm/$SDK_ID"
 if [ ! -d "$L18_SDK" ]; then

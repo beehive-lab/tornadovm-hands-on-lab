@@ -89,7 +89,7 @@ $FANCY banner "Matrix multiplication · JIT, a Leyden AOT cache, a GraalVM nativ
   "TornadoVM ${SDK_ID%%-*} · ${BACKENDS:-?} · $GPU · JDK $JDK · $SIZE × $SIZE, $([ "${API:-loop}" = kernel ] && echo "Kernel API" || echo "Loop Parallel API"), $RUNS starts each"
 echo
 
-spin "build target/matmul.jar" "$LOGS/build.log" ./mvnw -q -Dtornadovm.version="$AOT_TORNADOVM_MAVEN" package \
+spin "build target/matmul.jar" "$LOGS/build.log" ./mvnw -q -Dtornadovm.version="$MATMUL_TORNADOVM_MAVEN" package \
   || { tail -20 "$LOGS/build.log" >&2; exit 1; }
 
 # An AOT cache wants the same class and module paths as its training run, jars only, and no incubator module
