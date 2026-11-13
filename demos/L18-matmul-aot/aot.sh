@@ -105,7 +105,13 @@ JVM=(java @target/aot.args -cp target/matmul.jar)
 [ -n "${JAVA_HOME:-}" ] && JVM[0]="$JAVA_HOME/bin/java"
 
 ACT=0
-BACKEND_NAME="$(case "${BACKENDS%% *}" in cuda) echo CUDA;; opencl) echo OpenCL;; metal) echo Metal;; *) echo "${BACKENDS:-GPU}";; esac)"
+# the backend, as the act titles name it (a case statement, not inside $(...): bash 3.2 on macOS cannot parse that)
+case "${BACKENDS%% *}" in
+  cuda) BACKEND_NAME=CUDA ;;
+  opencl) BACKEND_NAME=OpenCL ;;
+  metal) BACKEND_NAME=Metal ;;
+  *) BACKEND_NAME="${BACKENDS:-GPU}" ;;
+esac
 if [[ $MODE == jit || $MODE == leyden || $MODE == all ]]; then
   $FANCY act $((ACT += 1)) "JIT" "every start pays for it all: the JVM loads and links TornadoVM's classes, then TC compiles the kernel"
   $FANCY pipeline "java:JVM starts" "load + link:TornadoVM, $BACKEND_NAME" "TC:Java → GPU code" "GPU:execute()"
