@@ -7,7 +7,7 @@
  *   1. add tornado-api to pom.xml;
  *   2. parallelise the method with @Parallel or a KernelContext, checked as you type by TornadoInsight;
  *   3. run it with TornadoVM's JIT compiler from IntelliJ;
- *   4. start it ahead of time: a Project Leyden AOT cache, then a GraalVM native image.
+ *   4. look inside TC, the kernel compiler, with tcirviz; L18 then starts the result ahead of time.
  *
  * Run it: java -cp target/classes com.example.matmul.MatrixMultiplication [size] [iterations]
  */

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Terminal rendering for L17's aot.sh: a banner, act headers, pipelines, the starts of each act, and the comparison
+"""Terminal rendering for L18's aot.sh: a banner, act headers, pipelines, the starts of each act, and the comparison
 of the three starts as a bar chart and a scoreboard. Standard library only. NO_COLOR=1 disables colors.
 The same look as L14's fancy.py (and devoxx/fancy.py in the CUDA demos repository, L04, L05).
 

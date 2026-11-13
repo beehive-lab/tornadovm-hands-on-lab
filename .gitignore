@@ -15,11 +15,13 @@ demos/L08-tornadoviz/bytecodes-jitllm/
 demos/L03-tornadoinsight/target/
 demos/L14-hybrid-mlx/build/
 demos/L15-maven-starter/target/
-# L17 run.sh and aot.sh: ./mvnw package, the AOT cache (target/matmul.aot) and the native image (target/matmul)
-demos/L17-matmul-jit-aot/target/
+# L17 run.sh: ./mvnw package; L18 run.sh and aot.sh: the same, the AOT cache (target/matmul.aot), the native image (target/matmul)
+demos/L17-matmul-jit/target/
+demos/L18-matmul-aot/target/
 # L15 run.sh: the JVM flags of its SDK, for the IntelliJ run configurations in demos/L15-maven-starter/.run/
 demos/L15-maven-starter/tornado.args
-demos/L17-matmul-jit-aot/tornado.args
+demos/L17-matmul-jit/tornado.args
+demos/L18-matmul-aot/tornado.args
 # benchmark tables from earlier GEMM runs
 stats-mxm-*.txt
 results/
@@ -34,7 +36,7 @@ demos/L10-devoxxgenie/DevoxxGenieIDEAPlugin/
 demos/L11-flink-sql-gpu/flink-accelerator-tornadovm/
 demos/L13-kotlin/TornadoVM/
 demos/L16-jitllm-quarkus-langchain4j/JitLLM-Quarkus-Langchain4j-Demo/
-demos/L17-matmul-jit-aot/tornadovm-tcirviz/
+demos/L17-matmul-jit/tornadovm-tcirviz/
 
 # Models are downloaded, never committed: L06 setup.sh (*.gguf, *.gguf.part while downloading)
 *.gguf

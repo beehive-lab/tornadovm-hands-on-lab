@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <!-- Runs on the TornadoVM SDK, JIT-compiling the kernel, through tornado.args, which demos/L17-matmul-jit-aot/run.sh writes. -->
+  <!-- Runs on the TornadoVM SDK, JIT-compiling the kernel, through tornado.args, which demos/L17-matmul-jit/run.sh writes. -->
   <configuration default="false" name="L17 2 · MatrixMultiplication (TornadoVM JIT)" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="com.example.matmul.MatrixMultiplication" />
     <module name="l17-matmul" />

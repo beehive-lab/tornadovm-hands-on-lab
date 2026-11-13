@@ -1,6 +1,6 @@
 # TornadoVM Hands-On Lab
 
-Every demo from *From Install to Insight: A Hands-On GPU Lab for Java Developers*, reproducible on macOS and Linux. The demos are numbered `L01`–`L17` in the order the lab runs them.
+Every demo from *From Install to Insight: A Hands-On GPU Lab for Java Developers*, reproducible on macOS and Linux. The demos are numbered `L01`–`L18` in the order the lab runs them.
 
 ## Setup once
 
@@ -40,7 +40,8 @@ For L16 (Quarkus + LangChain4j), run `demos/L16-jitllm-quarkus-langchain4j/setup
 | [L14](demos/L14-hybrid-mlx) | Hybrid API with Apple MLX: L15's FancyHybridMlx, then Java SGEMM against MLX (the Metal twin of L05) | – | ✓ | ✗ | ✗ |
 | [L15](demos/L15-maven-starter) | Your own Maven project, then the Hybrid API (`FancyHybrid`) | – | ✓ | ✓ | ◐ |
 | [L16](demos/L16-jitllm-quarkus-langchain4j) | jitLLM in a Quarkus app, through LangChain4j: a streamed summary | – | ✓ | ✓ | ✓ |
-| [L17](demos/L17-matmul-jit-aot) | Matrix multiplication: plain Java, then the GPU with JIT (TornadoInsight, IntelliJ), inside TC with tcirviz, then AOT (Leyden, native image) | 33 | ✓ | ✓ | ✓ |
+| [L17](demos/L17-matmul-jit) | Matrix multiplication: plain Java, then the GPU with JIT (TornadoInsight, IntelliJ), then inside TC with tcirviz | 33 | ✓ | ✓ | ✓ |
+| [L18](demos/L18-matmul-aot) | L17's matrix multiplication, ahead of time: a Leyden AOT cache and a GraalVM native image, three starts timed | 33 | ✓ | ✓ | ✓ |
 
 Each demo's README explains its ◐ or ✗.
 
@@ -74,7 +75,7 @@ If your GPU has less than a budget, lower the budget. On macOS the GPU can use o
 
 ## Layout
 
-`pom.xml` at the root lists the Maven demos (L03, L15, L17) as modules, so opening this folder in IntelliJ imports them all. Each demo still builds alone, with its own wrapper and TornadoVM version, and its `run.sh` builds only itself.
+`pom.xml` at the root lists the Maven demos (L03, L15, L17, L18) as modules, so opening this folder in IntelliJ imports them all. Each demo still builds alone, with its own wrapper and TornadoVM version, and its `run.sh` builds only itself.
 
 ```
 env/versions.env        versions, repositories, branches, model, memory budgets

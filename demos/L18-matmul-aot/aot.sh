@@ -1,18 +1,19 @@
 #!/usr/bin/env bash
-# L17 phase 2 · The same TornadoVM application, started three ways, drawn for the big screen, one act per start:
+# L18 · L17's TornadoVM application, started three ways, drawn for the big screen, one act per start:
 #   1. jit      java @tornado.args, as in IntelliJ
 #   2. leyden   the same, from a Project Leyden AOT cache (JDK 25+): one training run writes target/matmul.aot
 #   3. native   a GraalVM native image, target/matmul: no JVM at run time (needs GraalVM for JDK 25+, GRAALVM_HOME)
 # then the three starts side by side, and the checks. Every step's output is in target/logs/.
-# Needs steps 1 and 2 of README.md done: the class must call TornadoVM.
-#   demos/L17-matmul-jit-aot/aot.sh [jit|leyden|native|all] [size]      default: all 256
+#   demos/L18-matmul-aot/aot.sh [jit|leyden|native|all] [size]      default: all 256
 #   NO_PAUSE=1 skips the [enter] between acts · NO_COLOR=1 draws without colors · RUNS=n times n starts (default 5)
+#   API=kernel starts the Kernel API version; the Loop Parallel API (@Parallel) is the default
 set -euo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
 source "$HERE/sdk.sh" > /dev/null
 MODE="${1:-all}"; SIZE="${2:-256}"
 case "$MODE" in jit|leyden|native|all) ;; *) echo "usage: aot.sh [jit|leyden|native|all] [size]" >&2; exit 2 ;; esac
 ARGS=("$SIZE" 1)      # a start-up workload: compile the kernel, run it once, check it, exit
+case "${API:-loop}" in loop) ;; kernel) ARGS+=(kernel) ;; *) echo "API is loop or kernel" >&2; exit 2 ;; esac
 RUNS="${RUNS:-5}"     # each start is timed RUNS times; the median is reported
 
 FANCY="python3 $HERE/fancy.py"
@@ -85,12 +86,11 @@ fi
 
 mkdir -p "$LOGS"; : > "$STARTS"; : > "$CHECKS"
 $FANCY banner "Matrix multiplication · JIT, a Leyden AOT cache, a GraalVM native image" \
-  "TornadoVM ${SDK_ID%%-*} · ${BACKENDS:-?} · $GPU · JDK $JDK · $SIZE × $SIZE, $RUNS starts each"
+  "TornadoVM ${SDK_ID%%-*} · ${BACKENDS:-?} · $GPU · JDK $JDK · $SIZE × $SIZE, $([ "${API:-loop}" = kernel ] && echo "Kernel API" || echo "Loop Parallel API"), $RUNS starts each"
 echo
 
 spin "build target/matmul.jar" "$LOGS/build.log" ./mvnw -q -Dtornadovm.version="$AOT_TORNADOVM_MAVEN" package \
   || { tail -20 "$LOGS/build.log" >&2; exit 1; }
-uses_tornadovm || { echo "ERROR: MatrixMultiplication is still plain Java: do steps 1 and 2 of README.md first" >&2; exit 1; }
 
 # An AOT cache wants the same class and module paths as its training run, jars only, and no incubator module
 # in the boot layer. So the module path gets the runtime's modules only: not ".", and not tornado-unittests or

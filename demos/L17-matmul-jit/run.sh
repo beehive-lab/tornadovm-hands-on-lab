@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # L17 · Matrix multiplication: builds the project and runs MatrixMultiplication, as plain Java while the class is
 # plain Java (as committed), and on the GPU through TornadoVM's JIT once you have done steps 1 and 2 of README.md.
-# Also writes tornado.args, which the IntelliJ run configurations use. aot.sh does the AOT part.
-#   demos/L17-matmul-jit-aot/run.sh [size] [iterations]
+# Also writes tornado.args, which the IntelliJ run configurations use. L18 does the AOT part.
+#   demos/L17-matmul-jit/run.sh [size] [iterations]
 set -euo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
 source "$HERE/sdk.sh"

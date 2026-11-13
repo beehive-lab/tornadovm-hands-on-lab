@@ -1,5 +1,5 @@
-# L17 · sourced by run.sh and aot.sh: switches to this demo's TornadoVM SDK and writes tornado.args.
-# L17 runs on its own SDK, $AOT_TORNADOVM_SDK_*: the Leyden AOT cache and tornado-native-image ship from 8.0.0.
+# L17 · sourced by run.sh and tcirviz.sh: switches to this demo's TornadoVM SDK and writes tornado.args.
+# L17 runs on its own SDK, $AOT_TORNADOVM_SDK_*, the one L18 starts ahead of time: TC and tcirviz need 8.0.0+.
 source "$HERE/../../scripts/lib.sh"
 
 case "$(uname -s)" in
@@ -21,7 +21,7 @@ MAIN=com.example.matmul.MatrixMultiplication
 # true once the class calls TornadoVM, that is, after steps 1 and 2 of the exercise
 uses_tornadovm() { grep -q 'uk/ac/manchester/tornado' target/classes/com/example/matmul/MatrixMultiplication.class; }
 
-# tornado.args: the JVM flags of this SDK, one per line, for IntelliJ (VM options: @tornado.args) and for aot.sh.
+# tornado.args: the JVM flags of this SDK, one per line, for IntelliJ (VM options: @tornado.args).
 # The SDK's own tornado-argfile points at tornadovm/current, so it is generated here for this SDK instead.
 # Java does not read argfiles inside an argfile, so the @exportLists files are inlined.
 tornado --printJavaFlags | tr ' ' '\n' | sed '1d;/^$/d' | while IFS= read -r flag; do

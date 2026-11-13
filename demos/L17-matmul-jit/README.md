@@ -1,32 +1,31 @@
-# L17 · Matrix multiplication: plain Java, then the GPU with JIT, then AOT
+# L17 · Matrix multiplication: plain Java, then the GPU with JIT, then inside TC
 
-Start from a matrix multiplication in plain Java, with no TornadoVM in it. Make it a GPU kernel yourself, with TornadoInsight checking the code as you type, and run it with TornadoVM's JIT compiler from IntelliJ. Look inside with tcirviz: the method at every stage of TC, TornadoVM's kernel compiler, from bytecode to GPU code. Then start the same application ahead of time: from a Project Leyden AOT cache, and as a GraalVM native image. This is the flow of slide 33 of *Write Once, Accelerate Everywhere*.
+Start from a matrix multiplication in plain Java, with no TornadoVM in it. Make it a GPU kernel yourself, with TornadoInsight checking the code as you type, and run it with TornadoVM's JIT compiler from IntelliJ. Look inside with tcirviz: the method at every stage of TC, TornadoVM's kernel compiler, from bytecode to GPU code. This is the first half of slide 33 of *Write Once, Accelerate Everywhere*; [L18](../L18-matmul-aot) starts the result ahead of time.
 
-**Runs on:** every backend · **Needs:** [Setup once](../../README.md#setup-once), TornadoVM 8.1.0, JDK 25 or newer, IntelliJ IDEA with [TornadoInsight](../L03-tornadoinsight), and a GraalVM for JDK 25+ for the native image · **Code:** [`MatrixMultiplication.java`](src/main/java/com/example/matmul/MatrixMultiplication.java)
+**Runs on:** every backend · **Needs:** [Setup once](../../README.md#setup-once), TornadoVM 8.1.0, JDK 25 or newer, and IntelliJ IDEA with [TornadoInsight](../L03-tornadoinsight) · **Code:** [`MatrixMultiplication.java`](src/main/java/com/example/matmul/MatrixMultiplication.java)
 
 The repository holds only the starting point: plain Java and a `pom.xml` with no dependency. You make every TornadoVM change; don't commit them.
 
 ## Setup, once
 
-The Leyden AOT cache and `tornado-native-image` ship from TornadoVM 8.0.0, this demo runs on its own 8.1.0 SDK:
+L17 runs on its own 8.1.0 SDK, the one L18 starts ahead of time; TC, the kernel compiler tcirviz shows, ships from 8.0.0:
 
 ```bash
 sdk install tornadovm 8.1.0-jdk22plus-metal      # macOS;  or -cuda (NVIDIA), -opencl (Intel, AMD)
                                                  # answer n to making it the default
-sdk install java 25.0.2-open                     # the lab's JDK; the AOT cache needs JDK 25+
-sdk list java | grep graal                       # pick a GraalVM for JDK 25+, for the native image
+sdk install java 25.0.2-open                     # the lab's JDK
 ```
 
 In IntelliJ, open the lab folder (`File → Open…`, the repository root): its [`pom.xml`](../../pom.xml) imports L17 as a Maven module. In `Settings → TornadoInsight`, set the TornadoVM root to the 8.1.0 SDK, `~/.sdkman/candidates/tornadovm/8.1.0-jdk22plus-metal` (or `-cuda`, `-opencl`).
 
-## Phase 1 · From plain Java to the GPU, with JIT
+## From plain Java to the GPU, with JIT
 
 ### Step 0 · Run the plain Java
 
 Run `L17 1 · MatrixMultiplication (plain Java)` from the IntelliJ toolbar, or:
 
 ```bash
-demos/L17-matmul-jit-aot/run.sh            # [size] [iterations], default 1024 5
+demos/L17-matmul-jit/run.sh            # [size] [iterations], default 1024 5
 ```
 
 `matrixMultiplication` computes `C = A · B` for square matrices stored row by row in flat `float[]` arrays: three nested loops, one dot product per output element. Write down the time per execution: this is the CPU time to beat, about 900 ms at 1024 × 1024 on an M4 Pro.
@@ -68,7 +67,7 @@ Run `L17 2 · MatrixMultiplication (TornadoVM JIT)`. It passes `@tornado.args` a
 From the command line, `run.sh` now sees that the class calls TornadoVM and runs it through the SDK:
 
 ```bash
-demos/L17-matmul-jit-aot/run.sh
+demos/L17-matmul-jit/run.sh
 ```
 
 **You should see** (M4 Pro, 1024 × 1024): the first execution takes about 150–200 ms, because TornadoVM JIT-compiles the method to a GPU kernel on its first run. The next executions take about 3–6 ms, more than 100 times faster than the plain Java. Then `Result is correct`.
@@ -76,7 +75,7 @@ demos/L17-matmul-jit-aot/run.sh
 To see the kernel TornadoVM generated:
 
 ```bash
-cd demos/L17-matmul-jit-aot && tornado --printKernel -cp target/matmul.jar com.example.matmul.MatrixMultiplication 1024 1
+cd demos/L17-matmul-jit && tornado --printKernel -cp target/matmul.jar com.example.matmul.MatrixMultiplication 1024 1
 ```
 
 ### Step 4 · Look inside: the Java method on the GPU, with tcirviz
@@ -84,9 +83,9 @@ cd demos/L17-matmul-jit-aot && tornado --printKernel -cp target/matmul.jar com.e
 `--printKernel` shows only the result. [tcirviz](https://github.com/mikepapadim/tornadovm-tcirviz) shows how TC, TornadoVM's kernel compiler, gets there. It lays out the method at every step, from Java to bytecode, through TC's IR after every stage and pass, to the Metal, OpenCL or CUDA code. Click a Java line, a bytecode or an IR value and every pane highlights what came from it. It only compiles, so it needs no GPU and you can pick any of the three targets on any machine.
 
 ```bash
-demos/L17-matmul-jit-aot/tcirviz.sh          # the UI on kernels/MatrixMultiplication.java, at http://127.0.0.1:7878/
-demos/L17-matmul-jit-aot/tcirviz.sh app      # the UI on your own class from step 2: Open class… → MatrixMultiplication
-demos/L17-matmul-jit-aot/tcirviz.sh print    # no browser: the generated kernel; [metal|opencl|cuda] [size] [method]
+demos/L17-matmul-jit/tcirviz.sh          # the UI on kernels/MatrixMultiplication.java, at http://127.0.0.1:7878/
+demos/L17-matmul-jit/tcirviz.sh app      # the UI on your own class from step 2: Open class… → MatrixMultiplication
+demos/L17-matmul-jit/tcirviz.sh print    # no browser: the generated kernel; [metal|opencl|cuda] [size] [method]
 ```
 
 The first run clones tcirviz next to the script, at the commit pinned in [`env/versions.env`](../../env/versions.env), and builds it against the 8.1.0 SDK in a few seconds. [`kernels/MatrixMultiplication.java`](kernels/MatrixMultiplication.java) holds the exercise's method in three forms: `float[]` with `@Parallel`, the `FloatArray` version of the solution, and the Kernel API.
@@ -139,75 +138,9 @@ Try:
 
 From the terminal: `tcirviz.sh print opencl`, `tcirviz.sh print metal "" matrixMultiplicationKernel`.
 
-## Phase 2 · Ahead of time: Project Leyden and GraalVM native image
+## Next: L18, ahead of time
 
-With JIT, every start pays for starting the JVM, loading and linking the TornadoVM runtime and its drivers, and warming up TC, TornadoVM's kernel compiler. That cost is the same for every run, and it dominates a short one. Two ways to pay most of it ahead of time:
-
-| | What is stored ahead of time | Run with |
-|---|---|---|
-| **Project Leyden AOT cache** (JDK 25+, JEP 483/514/515) | the classes loaded and linked by a training run, resolved lambdas, and method profiles | the same JVM: `java -XX:AOTCache=matmul.aot …` |
-| **GraalVM native image** | the whole application, TornadoVM runtime, drivers and TC compiled into one executable | no JVM: `./matmul` |
-
-In both, the kernel is still compiled when the application runs: TC specialises it on the real arguments, as on the JVM. What moves ahead of time is the work around that compile.
-
-`aot.sh` builds the jar, then starts the application all three ways with a short workload (256 × 256, one execution), one act per start, as L14 draws the Hybrid API. Each act times 5 starts and shows each one as it ends. The script ends with the three starts side by side, a bar each, and the checks:
-
-```bash
-demos/L17-matmul-jit-aot/aot.sh            # [jit|leyden|native|all] [size], default all 256
-NO_PAUSE=1 demos/L17-matmul-jit-aot/aot.sh # no [enter] between acts; RUNS=n times n starts; NO_COLOR=1
-```
-
-Every step's output is in `target/logs/`.
-
-**You should see** (M4 Pro, Metal, JDK 25, GraalVM CE for JDK 25), the median wall time of the whole process. Each bar splits it into the start-up and the first `execute()`, where TornadoVM plans the task graph, TC compiles the kernel, the GPU driver builds it, and the GPU runs it:
-
-```
-    jit     java @tornado.args   █████████████████████████░░░░░░░░░░░░░░░░░░░    477 ms
-    leyden  java -XX:AOTCache    ███████████░░░░░░░░░░░                          241 ms   2.0× faster
-    native  target/matmul        ████████░                                       102 ms   4.7× faster ★
-```
-
-The cache makes both parts faster: the classes TC needs are already loaded and linked. The native image also makes the first `execute()` faster, about 16 ms instead of 200 ms, because TC itself is compiled ahead of time and starts warm.
-
-### The Leyden AOT cache, by hand
-
-`tornado` can train and use the cache itself: the first run writes it, the next ones start from it.
-
-```bash
-cd demos/L17-matmul-jit-aot && ./mvnw -q package
-tornado --aotCache target/matmul.aot -cp target/matmul.jar com.example.matmul.MatrixMultiplication 256 1   # training run
-tornado --aotCache target/matmul.aot -cp target/matmul.jar com.example.matmul.MatrixMultiplication 256 1   # from the cache
-```
-
-For the full gain, run `java` directly, as `aot.sh` does: the `tornado` launcher is a Python script that costs about 90 ms per start, and it keeps the SDK's test modules on the module path. `aot.sh` writes `target/aot.args`, `tornado.args` with a module path that holds only the runtime's modules, and runs:
-
-```bash
-java @target/aot.args -cp target/matmul.jar -XX:AOTCacheOutput=target/matmul.aot com.example.matmul.MatrixMultiplication 256 1   # training
-java @target/aot.args -cp target/matmul.jar -XX:AOTCache=target/matmul.aot      com.example.matmul.MatrixMultiplication 256 1   # production
-```
-
-Add `-Xlog:aot` to check: a cache in use logs `Opened AOT cache` and `full module graph: enabled`.
-
-### The GraalVM native image, by hand
-
-```bash
-cd demos/L17-matmul-jit-aot && ./mvnw -q package
-export GRAALVM_HOME=~/.sdkman/candidates/java/<a GraalVM for JDK 25+>
-export NATIVE_IMAGE_OPTIONS=-H:-VectorAPISupport     # GraalVM 25.2+, see Notes
-tornado-native-image -cp target/matmul.jar -o target/matmul com.example.matmul.MatrixMultiplication 256 1
-target/matmul 1024 5                                  # no JVM; -D options work as on the JVM
-```
-
-`tornado-native-image` first runs the application on GraalVM's JVM with the native-image agent, which records the reflection, resources and FFM downcalls it uses. Then it builds the executable from that, in about 30 s. Give the tracing run arguments that compile and launch every kernel: a code path it never ran fails in the executable.
-
-## Notes
-
-- **An AOT cache wants exactly the training run's set-up:** the same JDK build, the same flags, the same class and module paths, and the application as a jar, not `target/classes`. A cache that doesn't match is ignored, and the start is slow again. `aot.sh` adds `-XX:AOTMode=on`, which makes a mismatch an error instead.
-- **Retrain after any change** to the class, the SDK or the JDK: rerun `aot.sh`.
-- **`Support for Arena.ofShared … is not available with Vector API support`** from `native-image`: GraalVM 25.2 turns on Vector API support, which refuses the shared arenas TornadoVM's drivers use. `-H:-VectorAPISupport` turns it off; `aot.sh` sets it.
-- **The executable still needs the GPU driver** (Metal, `libcuda` or the OpenCL ICD), loaded at run time as on the JVM. It doesn't need the SDK.
-- **The JIT row of `aot.sh` is not the IntelliJ run.** It uses the same trimmed module path as the cache, so the two rows differ only by the cache.
-- **Full guide:** [`LEYDEN_GRAALVM_NATIVE_IMAGE.md`](https://github.com/beehive-lab/TornadoVM/blob/master/LEYDEN_GRAALVM_NATIVE_IMAGE.md) in TornadoVM: AppCDS for JDK 21, loading one backend only (`-Dtornado.enabled.backends`), and measurements on CUDA.
+[L18](../L18-matmul-aot) starts this application ahead of time, from a Project Leyden AOT cache and as a GraalVM native image. It ships the solution below as its class, so it runs whatever state your exercise is in.
 
 ## Solution
 

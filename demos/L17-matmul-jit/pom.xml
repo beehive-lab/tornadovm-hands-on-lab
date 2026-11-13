@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- L17 · Matrix multiplication, from plain Java to a GPU kernel, then started ahead of time.
-       ./mvnw package     target/classes, and target/matmul.jar for the AOT steps (an AOT cache accepts jars only)
+<!-- L17 · Matrix multiplication, from plain Java to a GPU kernel; L18 starts the result ahead of time.
+       ./mvnw package     target/classes and target/matmul.jar
      As committed, the project is plain Java and has no dependency. Step 1 of the exercise adds the TornadoVM API
      below (see README.md). Keep tornadovm.version in step with AOT_TORNADOVM_MAVEN in env/versions.env. -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"

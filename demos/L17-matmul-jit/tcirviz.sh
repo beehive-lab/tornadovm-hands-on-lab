@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # L17 · tcirviz: watch TC, TornadoVM's kernel compiler, turn the matrix multiplication into GPU code, stage by stage.
 # Clones and builds tcirviz next to this script on first use, against L17's 8.1.0 SDK. Compiles only: no GPU needed.
-#   demos/L17-matmul-jit-aot/tcirviz.sh                 the UI on kernels/MatrixMultiplication.java, the lab's kernel
-#   demos/L17-matmul-jit-aot/tcirviz.sh app             the UI on your own class: Open class… lists it, from src/main/java
-#   demos/L17-matmul-jit-aot/tcirviz.sh print [backend] [size] [method]
+#   demos/L17-matmul-jit/tcirviz.sh                 the UI on kernels/MatrixMultiplication.java, the lab's kernel
+#   demos/L17-matmul-jit/tcirviz.sh app             the UI on your own class: Open class… lists it, from src/main/java
+#   demos/L17-matmul-jit/tcirviz.sh print [backend] [size] [method]
 #                                                       the generated kernel in the terminal; metal|opencl|cuda, 1024,
 #                                                       matrixMultiplication (or …FloatArray, …Kernel); size ""
 #                                                       leaves size unknown when compiling
