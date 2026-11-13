@@ -17,6 +17,14 @@ sdk install java 25.0.2-open                     # the lab's JDK; the AOT cache 
 sdk list java | grep graal                       # pick a GraalVM for JDK 25+, for the native image
 ```
 
+`native-image` links the executable with the system's C toolchain:
+
+```bash
+xcode-select --install                                        # macOS
+sudo apt-get install build-essential zlib1g-dev               # Linux: Debian, Ubuntu
+sudo dnf install gcc glibc-devel zlib-devel libstdc++-static  # Linux: Fedora, RHEL
+```
+
 ## Run it with JIT first
 
 ```bash
