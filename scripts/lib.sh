@@ -7,9 +7,13 @@ if [ -z "${TORNADOVM_HOME:-}" ] || ! command -v tornado >/dev/null 2>&1; then
   exit 1
 fi
 
-# Installed backends, from the SDK itself, e.g. "cuda" or "metal opencl".
-BACKENDS="$(sed -n 's/^tornado\.backends=//p' "$TORNADOVM_HOME/etc/tornado.backend" 2>/dev/null \
-            | tr ',' ' ' | sed 's/-backend//g')"
+# Installed backends, from the SDK itself, e.g. "cuda" or "metal opencl". A demo that switches to its own SDK
+# (L17, L18) calls read_backends again after the switch.
+read_backends() {
+  BACKENDS="$(sed -n 's/^tornado\.backends=//p' "$TORNADOVM_HOME/etc/tornado.backend" 2>/dev/null \
+              | tr ',' ' ' | sed 's/-backend//g')"
+}
+read_backends
 has_backend() { [[ " $BACKENDS " == *" $1 "* ]]; }
 
 # Exit code 3 = the demo does not apply to this platform (reported as SKIP by run-all.sh).

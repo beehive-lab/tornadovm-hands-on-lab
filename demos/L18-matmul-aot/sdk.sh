@@ -13,6 +13,8 @@ if [ ! -d "$L18_SDK" ]; then
 fi
 export TORNADOVM_HOME="$L18_SDK"
 export PATH="$TORNADOVM_HOME/bin:$PATH"
+read_backends   # BACKENDS so far were the default SDK's; from here on, this SDK's
+note "L18 runs on TornadoVM $SDK_ID · backends: ${BACKENDS:-unknown}"
 JAVA="${JAVA_HOME:+$JAVA_HOME/bin/}java"
 
 cd "$HERE"
