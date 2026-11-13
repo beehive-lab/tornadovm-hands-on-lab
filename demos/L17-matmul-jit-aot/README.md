@@ -150,19 +150,24 @@ With JIT, every start pays for starting the JVM, loading and linking the Tornado
 
 In both, the kernel is still compiled when the application runs: TC specialises it on the real arguments, as on the JVM. What moves ahead of time is the work around that compile.
 
-`aot.sh` builds the jar, starts the application all three ways with a short workload (256 × 256, one execution), and times each start, as the median of 5:
+`aot.sh` builds the jar, then starts the application all three ways with a short workload (256 × 256, one execution), one act per start, as L14 draws the Hybrid API. Each act times 5 starts and shows each one as it ends. The script ends with the three starts side by side, a bar each, and the checks:
 
 ```bash
 demos/L17-matmul-jit-aot/aot.sh            # [jit|leyden|native|all] [size], default all 256
+NO_PAUSE=1 demos/L17-matmul-jit-aot/aot.sh # no [enter] between acts; RUNS=n times n starts; NO_COLOR=1
 ```
 
-**You should see** (M4 Pro, Metal, JDK 25, GraalVM CE for JDK 25), wall time of the whole process:
+Every step's output is in `target/logs/`.
 
-| Start | Time |
-|---|---:|
-| `jit` · `java @tornado.args` | 420 ms |
-| `leyden` · `java -XX:AOTCache=target/matmul.aot` | 288 ms |
-| `native` · `target/matmul` | 91 ms |
+**You should see** (M4 Pro, Metal, JDK 25, GraalVM CE for JDK 25), the median wall time of the whole process. Each bar splits it into the start-up and the first `execute()`, where TC compiles the kernel and the GPU runs it:
+
+```
+    jit     java @tornado.args   █████████████████████████░░░░░░░░░░░░░░░░░░░    477 ms
+    leyden  java -XX:AOTCache    ███████████░░░░░░░░░░░                          241 ms   2.0× faster
+    native  target/matmul        ████████░                                       102 ms   4.7× faster ★
+```
+
+The cache makes both parts faster: the classes TC needs are already loaded and linked. The native image also makes the first `execute()` faster, about 16 ms instead of 200 ms, because TC itself is compiled ahead of time and starts warm.
 
 ### The Leyden AOT cache, by hand
 
