@@ -159,7 +159,7 @@ NO_PAUSE=1 demos/L17-matmul-jit-aot/aot.sh # no [enter] between acts; RUNS=n tim
 
 Every step's output is in `target/logs/`.
 
-**You should see** (M4 Pro, Metal, JDK 25, GraalVM CE for JDK 25), the median wall time of the whole process. Each bar splits it into the start-up and the first `execute()`, where TC compiles the kernel and the GPU runs it:
+**You should see** (M4 Pro, Metal, JDK 25, GraalVM CE for JDK 25), the median wall time of the whole process. Each bar splits it into the start-up and the first `execute()`, where TornadoVM plans the task graph, TC compiles the kernel, the GPU driver builds it, and the GPU runs it:
 
 ```
     jit     java @tornado.args   █████████████████████████░░░░░░░░░░░░░░░░░░░    477 ms

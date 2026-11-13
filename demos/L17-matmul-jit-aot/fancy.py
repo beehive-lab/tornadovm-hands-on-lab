@@ -129,7 +129,7 @@ def compare(starts_path, checks_path, title):
             print(f"    {pad(label, 28)} {bar} {wall:>6,.0f} ms  {gain}{star}")
         print()
         print(paint(DIM, "    █ start-up: the JVM or the executable, TornadoVM's runtime and driver"))
-        print(paint(DIM, "    ░ the first execute(): TC compiles the kernel for the GPU, which then runs it"))
+        print(paint(DIM, "    ░ the first execute(): TornadoVM plans the task graph, TC and the driver compile the kernel, the GPU runs it"))
         print()
     checks = read_rows(checks_path)
     lines = [paint(BOLD, "  " + "start-up, ahead of time"), paint(DIM, "  " + "─" * 76)]

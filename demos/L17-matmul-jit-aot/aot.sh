@@ -105,9 +105,10 @@ JVM=(java @target/aot.args -cp target/matmul.jar)
 [ -n "${JAVA_HOME:-}" ] && JVM[0]="$JAVA_HOME/bin/java"
 
 ACT=0
+BACKEND_NAME="$(case "${BACKENDS%% *}" in cuda) echo CUDA;; opencl) echo OpenCL;; metal) echo Metal;; *) echo "${BACKENDS:-GPU}";; esac)"
 if [[ $MODE == jit || $MODE == leyden || $MODE == all ]]; then
   $FANCY act $((ACT += 1)) "JIT" "every start pays for it all: the JVM loads and links TornadoVM's classes, then TC compiles the kernel"
-  $FANCY pipeline "java:JVM starts" "load + link:TornadoVM, Metal" "TC:Java → GPU code" "GPU:execute()"
+  $FANCY pipeline "java:JVM starts" "load + link:TornadoVM, $BACKEND_NAME" "TC:Java → GPU code" "GPU:execute()"
   time_starts jit "${JVM[@]}" "$MAIN" "${ARGS[@]}"
   check "$(grep -q $'^jit\t.*\tFAIL$' "$STARTS" && echo FAIL || echo PASS)" "jit: every start computes the right result"
 fi
@@ -143,7 +144,7 @@ fi
 
 if [[ $MODE == native || $MODE == all ]]; then
   [ "$ACT" -gt 0 ] && pause
-  $FANCY act $((ACT += 1)) "GraalVM native image" "the application, TornadoVM's runtime, the Metal driver and TC, compiled into one executable: no JVM"
+  $FANCY act $((ACT += 1)) "GraalVM native image" "the application, TornadoVM's runtime, the $BACKEND_NAME backend and TC, compiled into one executable: no JVM"
   $FANCY pipeline "tracing run:native-image agent" "native-image:build, ~30 s" "target/matmul:no JVM"
   if [ -z "$GRAALVM_HOME" ] || [ ! -x "$GRAALVM_HOME/bin/native-image" ]; then
     echo "    $(c 2 "skipped: set GRAALVM_HOME to a GraalVM for JDK 25+ (sdk list java | grep graal)")"; echo
